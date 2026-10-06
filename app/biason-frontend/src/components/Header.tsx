@@ -72,8 +72,8 @@ export const Header: React.FC<HeaderProps> = ({ isAdmin, setIsAdmin }) => {
 
       {/* Admin Login Modal (Secure, No hints displayed) */}
       {showPinModal && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150">
-          <div className="bg-white border border-stone-200 rounded-t-3xl sm:rounded-3xl max-w-sm w-full p-6 shadow-2xl relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150 overflow-y-auto">
+          <div className="bg-white border border-stone-200 rounded-3xl max-w-sm w-full p-6 shadow-2xl relative my-auto">
             <button
               onClick={() => {
                 setShowPinModal(false);
