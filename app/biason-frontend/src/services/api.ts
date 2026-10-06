@@ -1,8 +1,11 @@
 import { Book, CharityCampaign, GuestbookEntry } from '../types';
 import { INITIAL_BOOKS, INITIAL_CAMPAIGN, INITIAL_GUESTBOOK } from '../mockData';
 
+// In production, VITE_API_URL can be set in Vercel Environment Variables.
+// Otherwise, it falls back to current hostname on port 8080.
+const ENV_API_URL = (import.meta as any).env?.VITE_API_URL;
 const API_HOST = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
-const BASE_URL = `http://${API_HOST}:8080/api`;
+const BASE_URL = ENV_API_URL ? `${ENV_API_URL}/api` : `http://${API_HOST}:8080/api`;
 
 export const api = {
   async isBackendLive(): Promise<boolean> {
