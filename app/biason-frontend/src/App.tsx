@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Book, CharityCampaign, GuestbookEntry } from './types';
 import { INITIAL_BOOKS, INITIAL_CAMPAIGN, INITIAL_GUESTBOOK } from './mockData';
+import { api } from './services/api';
 import { Header } from './components/Header';
 import { CharityBanner } from './components/CharityBanner';
 import { BookCard } from './components/BookCard';
@@ -10,237 +11,237 @@ import { GuestbookSection } from './components/GuestbookSection';
 import { Search, Filter } from 'lucide-react';
 
 export const App: React.FC = () => {
-  // Persistence via localStorage
-  const [books, setBooks] = useState<Book[]>(() => {
-    const saved = localStorage.getItem('BSNM_BOOKS');
-    return saved ? JSON.parse(saved) : INITIAL_BOOKS;
-  });
+  const [books, setBooks] = useState<Book[]>(INITIAL_BOOKS);
+  const [campaign, setCampaign] = useState<CharityCampaign>(INITIAL_CAMPAIGN);
+  const [currentRaised, setCurrentRaised] = useState<number>(0);
+  const [booksSoldCount, setBooksSoldCount] = useState<number>(0);
+  const [guestbook, setGuestbook] = useState<GuestbookEntry[]>(INITIAL_GUESTBOOK);
+  const [isBackendConnected, setIsBackendConnected] = useState<boolean>(false);
 
-  const [campaign] = useState<CharityCampaign>(INITIAL_CAMPAIGN);
-
-  const [guestbook, setGuestbook] = useState<GuestbookEntry[]>(() => {
-    const saved = localStorage.getItem('BSNM_GUESTBOOK');
-    return saved ? JSON.parse(saved) : INITIAL_GUESTBOOK;
-  });
-
+  const [isAdmin, setIsAdmin] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
-  const [qrBook, setQrBook] = useState<Book | null>(null);
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [qrModalBook, setQrModalBook] = useState<Book | null>(null);
 
-  // Search & Filter State
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('ALL');
-  const [selectedStatus, setSelectedStatus] = useState('ALL');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
 
-  useEffect(() => {
-    localStorage.setItem('BSNM_BOOKS', JSON.stringify(books));
-  }, [books]);
+  const loadData = async () => {
+    const isLive = await api.isBackendLive();
+    setIsBackendConnected(isLive);
 
-  useEffect(() => {
-    localStorage.setItem('BSNM_GUESTBOOK', JSON.stringify(guestbook));
-  }, [guestbook]);
-
-  // Handle URL hash for QR scan lookup (e.g. #BSNM-001)
-  useEffect(() => {
-    const checkHash = () => {
-      const hash = window.location.hash.replace('#', '').trim();
-      if (hash) {
-        const found = books.find((b) => b.qr_code.toUpperCase() === hash.toUpperCase());
-        if (found) {
-          setSelectedBook(found);
-        }
+    if (isLive) {
+      const [bList, cData, gList] = await Promise.all([
+        api.getBooks(),
+        api.getCampaign(),
+        api.getGuestbook()
+      ]);
+      setBooks(bList);
+      setCampaign(cData.campaign);
+      setCurrentRaised(cData.currentRaised);
+      setBooksSoldCount(cData.booksSoldCount);
+      setGuestbook(gList);
+    } else {
+      const savedBooks = localStorage.getItem('BSNM_BOOKS');
+      if (savedBooks) {
+        const parsed = JSON.parse(savedBooks);
+        setBooks(parsed);
+        const sold = parsed.filter((b: Book) => b.status === 'SOLD');
+        setCurrentRaised(sold.reduce((sum: number, b: Book) => sum + b.price, 0));
+        setBooksSoldCount(sold.length);
+      } else {
+        const sold = INITIAL_BOOKS.filter(b => b.status === 'SOLD');
+        setCurrentRaised(sold.reduce((sum, b) => sum + b.price, 0));
+        setBooksSoldCount(sold.length);
       }
-    };
-    checkHash();
-    window.addEventListener('hashchange', checkHash);
-    return () => window.removeEventListener('hashchange', checkHash);
-  }, [books]);
 
-  // Calculations
-  const currentRaised = books
-    .filter((b) => b.status === 'SOLD')
-    .reduce((sum, b) => sum + b.price, 0);
-
-  const booksSoldCount = books.filter((b) => b.status === 'SOLD').length;
-
-  const categories = ['ALL', ...Array.from(new Set(books.map((b) => b.category)))];
-
-  // Filtered books
-  const filteredBooks = books.filter((b) => {
-    const matchesSearch =
-      b.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      b.author.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'ALL' || b.category === selectedCategory;
-    const matchesStatus =
-      selectedStatus === 'ALL' ||
-      (selectedStatus === 'AVAILABLE' && b.status === 'AVAILABLE') ||
-      (selectedStatus === 'SOLD' && b.status === 'SOLD');
-    return matchesSearch && matchesCategory && matchesStatus;
-  });
-
-  const handleToggleStatus = (target: Book) => {
-    setBooks((prev) =>
-      prev.map((b) =>
-        b.id === target.id
-          ? {
-              ...b,
-              status: b.status === 'AVAILABLE' ? 'SOLD' : 'AVAILABLE',
-              sold_at: b.status === 'AVAILABLE' ? new Date().toISOString() : undefined,
-            }
-          : b
-      )
-    );
-    if (selectedBook && selectedBook.id === target.id) {
-      setSelectedBook((prev) =>
-        prev
-          ? {
-              ...prev,
-              status: prev.status === 'AVAILABLE' ? 'SOLD' : 'AVAILABLE',
-            }
-          : null
-      );
+      const savedGuestbook = localStorage.getItem('BSNM_GUESTBOOK');
+      if (savedGuestbook) setGuestbook(JSON.parse(savedGuestbook));
     }
   };
 
-  const handleAddGuestbook = (name: string, message: string) => {
-    const newEntry: GuestbookEntry = {
-      id: Date.now(),
-      sender_name: name,
-      message,
-      created_at: new Date().toLocaleString('vi-VN', {
-        dateStyle: 'short',
-        timeStyle: 'short',
-      }),
-    };
-    setGuestbook([newEntry, ...guestbook]);
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  useEffect(() => {
+    if (!isBackendConnected) {
+      const soldBooks = books.filter(b => b.status === 'SOLD');
+      const total = soldBooks.reduce((sum, b) => sum + b.price, 0);
+      setCurrentRaised(total);
+      setBooksSoldCount(soldBooks.length);
+      localStorage.setItem('BSNM_BOOKS', JSON.stringify(books));
+    }
+  }, [books, isBackendConnected]);
+
+  const handleToggleStatus = async (targetBook: Book) => {
+    const newStatus = targetBook.status === 'AVAILABLE' ? 'SOLD' : 'AVAILABLE';
+
+    if (isBackendConnected) {
+      await api.updateBookStatus(targetBook.id, newStatus);
+      const [freshBooks, freshCamp] = await Promise.all([
+        api.getBooks(),
+        api.getCampaign()
+      ]);
+      setBooks(freshBooks);
+      setCampaign(freshCamp.campaign);
+      setCurrentRaised(freshCamp.currentRaised);
+      setBooksSoldCount(freshCamp.booksSoldCount);
+    } else {
+      setBooks(prev =>
+        prev.map(b => (b.id === targetBook.id ? { ...b, status: newStatus } : b))
+      );
+    }
+
+    if (selectedBook && selectedBook.id === targetBook.id) {
+      setSelectedBook(prev => (prev ? { ...prev, status: newStatus } : null));
+    }
   };
 
+  const handleAddGuestbook = async (sender_name: string, message: string) => {
+    if (isBackendConnected) {
+      await api.addGuestbook(sender_name, message);
+      const freshG = await api.getGuestbook();
+      setGuestbook(freshG);
+    } else {
+      const newEntry: GuestbookEntry = {
+        id: Date.now(),
+        sender_name,
+        message,
+        created_at: new Date().toISOString().replace('T', ' ').substring(0, 16)
+      };
+      const updated = [newEntry, ...guestbook];
+      setGuestbook(updated);
+      localStorage.setItem('BSNM_GUESTBOOK', JSON.stringify(updated));
+    }
+  };
+
+  const categories = ['ALL', ...Array.from(new Set(books.map(b => b.category)))];
+
+  const filteredBooks = books.filter(b => {
+    const matchesCategory = selectedCategory === 'ALL' || b.category === selectedCategory;
+    const matchesSearch =
+      b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      b.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      b.publisher.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
   return (
-    <div className="min-h-screen bg-[#F6F0E6] flex flex-col justify-between">
-      <div>
-        <Header
-          isAdmin={isAdmin}
-          onOpenAdmin={() => {
-            const pass = prompt('Nhập mã PIN quản trị (mặc định: 1234):');
-            if (pass === '1234') {
-              setIsAdmin(!isAdmin);
-            } else if (pass !== null) {
-              alert('Sai mã PIN!');
-            }
-          }}
+    <div className="min-h-screen bg-[#fcfaf4] text-amber-950 font-sans selection:bg-amber-900 selection:text-amber-50">
+      <Header
+        isAdmin={isAdmin}
+        setIsAdmin={setIsAdmin}
+        isBackendConnected={isBackendConnected}
+      />
+
+      <main className="max-w-6xl mx-auto px-4 py-8 space-y-12">
+        <CharityBanner
+          campaign={campaign}
+          currentRaised={currentRaised}
+          booksSoldCount={booksSoldCount}
+          totalBooks={books.length}
         />
 
-        <main className="max-w-6xl mx-auto px-4 py-6 md:py-8">
-          {/* Charity Campaign Progress */}
-          <CharityBanner
-            campaign={campaign}
-            currentRaised={currentRaised}
-            booksSoldCount={booksSoldCount}
-            totalBooks={books.length}
-          />
-
-          {/* Search and Filters Bar */}
-          <div className="bg-[#FAF6EE] border border-[#D8C7B0] p-4 rounded-xl mb-6 flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between shadow-sm">
-            {/* Search Input */}
-            <div className="relative flex-1">
-              <Search className="w-4 h-4 text-[#7A6B5D] absolute left-3 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                placeholder="Tìm tên sách, tác giả..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 text-xs md:text-sm rounded-lg bg-[#FDFBF7] border border-[#D8C7B0] focus:outline-none focus:border-[#9E2A2B]"
-              />
-            </div>
-
-            {/* Category Filter */}
-            <div className="flex gap-2 items-center flex-wrap">
-              <div className="flex items-center gap-1 text-xs text-[#7A6B5D]">
-                <Filter className="w-3.5 h-3.5 text-[#C58940]" />
-                <span>Thể loại:</span>
-              </div>
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="text-xs py-2 px-2.5 rounded-lg bg-[#FDFBF7] border border-[#D8C7B0] text-[#3D2F24] focus:outline-none"
-              >
-                {categories.map((c) => (
-                  <option key={c} value={c}>
-                    {c === 'ALL' ? 'Tất cả thể loại' : c}
-                  </option>
-                ))}
-              </select>
-
-              <select
-                value={selectedStatus}
-                onChange={(e) => setSelectedStatus(e.target.value)}
-                className="text-xs py-2 px-2.5 rounded-lg bg-[#FDFBF7] border border-[#D8C7B0] text-[#3D2F24] focus:outline-none"
-              >
-                <option value="ALL">Tất cả tình trạng</option>
-                <option value="AVAILABLE">Còn sách</option>
-                <option value="SOLD">Đã có chủ nhân</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Book Catalog Grid */}
-          <div className="mb-8">
-            <div className="flex justify-between items-baseline mb-4">
-              <h2 className="text-xl font-serif font-bold text-[#3D2F24]">
-                Kệ Sách Cổ (1970 – 2000)
+        <section className="space-y-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-amber-900/15 pb-4">
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-amber-950 flex items-center gap-3">
+                <span>Tủ Sách Hoài Niệm (1970 – 2000)</span>
+                <span className="text-xs font-sans font-normal px-2.5 py-1 bg-amber-900/10 text-amber-900 rounded-full border border-amber-900/10">
+                  {filteredBooks.length} cuốn
+                </span>
               </h2>
-              <span className="text-xs text-[#7A6B5D]">
-                Hiển thị {filteredBooks.length} / {books.length} cuốn
-              </span>
+              <p className="text-sm text-amber-800/80 mt-1 font-serif italic">
+                "Mỗi cuốn sách cũ là một mảnh ghép lịch sử, một lời tri ấn thiêng liêng gửi tới các thế hệ cha anh."
+              </p>
             </div>
 
-            {filteredBooks.length === 0 ? (
-              <div className="text-center py-16 bg-[#FDFBF7] rounded-xl border border-[#D8C7B0]">
-                <p className="text-[#7A6B5D] text-sm font-serif">
-                  Không tìm thấy cuốn sách nào khớp với từ khóa tìm kiếm.
-                </p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="relative">
+                <Search className="w-4 h-4 text-amber-800/60 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  placeholder="Tìm tên sách, tác giả..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9 pr-4 py-2 rounded-xl text-xs bg-amber-50/90 border border-amber-900/20 focus:outline-none focus:ring-2 focus:ring-amber-800 w-full sm:w-56"
+                />
               </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-                {filteredBooks.map((book) => (
-                  <BookCard
-                    key={book.id}
-                    book={book}
-                    onSelect={setSelectedBook}
-                    onShowQR={setQrBook}
-                    isAdmin={isAdmin}
-                    onToggleStatus={handleToggleStatus}
-                  />
-                ))}
+
+              <div className="relative">
+                <Filter className="w-4 h-4 text-amber-800/60 absolute left-3 top-1/2 -translate-y-1/2" />
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="pl-9 pr-8 py-2 rounded-xl text-xs bg-amber-50/90 border border-amber-900/20 focus:outline-none focus:ring-2 focus:ring-amber-800 appearance-none cursor-pointer w-full"
+                >
+                  {categories.map((c) => (
+                    <option key={c} value={c}>
+                      {c === 'ALL' ? 'Tất cả thể loại' : c}
+                    </option>
+                  ))}
+                </select>
               </div>
-            )}
+            </div>
           </div>
 
-          {/* Guestbook Section */}
-          <GuestbookSection entries={guestbook} onAddEntry={handleAddGuestbook} />
-        </main>
-      </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {filteredBooks.map((book) => (
+              <BookCard
+                key={book.id}
+                book={book}
+                isAdmin={isAdmin}
+                onSelect={setSelectedBook}
+                onShowQR={setQrModalBook}
+                onToggleStatus={handleToggleStatus}
+              />
+            ))}
+          </div>
 
-      {/* Footer */}
-      <footer className="border-t border-[#D8C7B0] bg-[#FAF6EE] py-6 text-center text-xs text-[#7A6B5D] mt-12">
-        <p className="font-serif font-semibold text-[#3D2F24] mb-1">
-          Dự án "Bìa Sờn Nắng Mới" — Môn học SSG105 • Đại học FPT
-        </p>
-        <p>100% Lợi nhuận gửi tặng Trung tâm Điều dưỡng Thương binh và Người có công Long Đất</p>
+          {filteredBooks.length === 0 && (
+            <div className="text-center py-12 border border-dashed border-amber-900/20 rounded-2xl bg-amber-50/40">
+              <p className="text-amber-800/70 font-serif text-sm">Không tìm thấy cuốn sách nào phù hợp với từ khóa.</p>
+            </div>
+          )}
+        </section>
+
+        <GuestbookSection
+          entries={guestbook}
+          onAddEntry={(name, msg) => handleAddGuestbook(name, msg)}
+        />
+      </main>
+
+      <footer className="border-t border-amber-900/15 bg-amber-900 text-amber-100/90 py-8 mt-16 font-serif">
+        <div className="max-w-6xl mx-auto px-4 text-center space-y-2">
+          <p className="text-base font-bold tracking-wide">DỰ ÁN BÌA SỜN NẮNG MỚI • MÔN HỌC SSG105 (ĐẠI HỌC FPT)</p>
+          <p className="text-xs text-amber-200/80 font-sans">
+            Toàn bộ 100% lợi nhuận thu được được gửi tặng Trung tâm Điều dưỡng Thương binh và Người có công Long Đất
+          </p>
+          <p className="text-[11px] text-amber-300/60 font-sans pt-2">
+            Hệ thống Fullstack: React 18 + TypeScript + Spring Boot 3 + H2 Persistent Database
+          </p>
+        </div>
       </footer>
 
-      {/* Modals */}
       {selectedBook && (
         <BookDetailModal
           book={selectedBook}
           onClose={() => setSelectedBook(null)}
-          onShowQR={setQrBook}
+          onShowQR={(b) => {
+            setSelectedBook(null);
+            setQrModalBook(b);
+          }}
           isAdmin={isAdmin}
           onToggleStatus={handleToggleStatus}
         />
       )}
 
-      {qrBook && <QRModal book={qrBook} onClose={() => setQrBook(null)} />}
+      {qrModalBook && (
+        <QRModal
+          book={qrModalBook}
+          onClose={() => setQrModalBook(null)}
+        />
+      )}
     </div>
   );
 };
