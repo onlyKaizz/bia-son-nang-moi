@@ -1,7 +1,8 @@
 import { Book, CharityCampaign, GuestbookEntry } from '../types';
 import { INITIAL_BOOKS, INITIAL_CAMPAIGN, INITIAL_GUESTBOOK } from '../mockData';
 
-const BASE_URL = 'http://localhost:8080/api';
+const API_HOST = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
+const BASE_URL = `http://${API_HOST}:8080/api`;
 
 export const api = {
   async isBackendLive(): Promise<boolean> {
