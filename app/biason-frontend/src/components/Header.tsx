@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import React, { useState } from 'react';
 import { Shield, Lock, X, Check, LogOut } from 'lucide-react';
 
@@ -70,9 +71,9 @@ export const Header: React.FC<HeaderProps> = ({ isAdmin, setIsAdmin }) => {
         </div>
       </div>
 
-      {/* Admin Login Modal (Secure, No hints displayed) */}
-      {showPinModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150 overflow-y-auto">
+      {/* Admin Login Modal with createPortal to escape sticky header */}
+      {showPinModal && typeof document !== 'undefined' && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150 overflow-y-auto">
           <div className="bg-white border border-stone-200 rounded-3xl max-w-sm w-full p-6 shadow-2xl relative my-auto">
             <button
               onClick={() => {
@@ -141,7 +142,8 @@ export const Header: React.FC<HeaderProps> = ({ isAdmin, setIsAdmin }) => {
               </button>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </header>
   );

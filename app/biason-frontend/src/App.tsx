@@ -25,7 +25,6 @@ export const App: React.FC = () => {
   const [showAddBookModal, setShowAddBookModal] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
 
   const loadData = async () => {
     const isLive = await api.isBackendLive();
@@ -179,15 +178,12 @@ export const App: React.FC = () => {
     }
   };
 
-  const categories = ['ALL', ...Array.from(new Set(books.map(b => b.category)))];
-
   const filteredBooks = books.filter(b => {
-    const matchesCategory = selectedCategory === 'ALL' || b.category === selectedCategory;
     const matchesSearch =
       b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       b.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
       b.publisher.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
+    return matchesSearch;
   });
 
   return (
@@ -237,8 +233,8 @@ export const App: React.FC = () => {
             )}
           </div>
 
-          {/* Search bar & Horizontal Scrollable Category Pills (Mobile-First) */}
-          <div className="space-y-3">
+          {/* Search Bar */}
+          <div>
             <div className="relative">
               <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
@@ -248,26 +244,6 @@ export const App: React.FC = () => {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-2.5 rounded-2xl text-xs sm:text-sm bg-white border border-stone-200/90 focus:outline-none focus:ring-2 focus:ring-stone-900 shadow-xs"
               />
-            </div>
-
-            {/* Horizontal Scrollable Category Pills */}
-            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
-              {categories.map((c) => {
-                const isSelected = selectedCategory === c;
-                return (
-                  <button
-                    key={c}
-                    onClick={() => setSelectedCategory(c)}
-                    className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition active:scale-95 ${
-                      isSelected
-                        ? 'bg-stone-900 text-white shadow-xs'
-                        : 'bg-white text-stone-700 border border-stone-200 hover:bg-stone-50'
-                    }`}
-                  >
-                    {c === 'ALL' ? 'Tất cả' : c}
-                  </button>
-                );
-              })}
             </div>
           </div>
 

@@ -130,19 +130,4 @@ export const INITIAL_BOOKS: Book[] = [
   }
 ];
 
-export const INITIAL_GUESTBOOK: GuestbookEntry[] = [
-  {
-    id: 1,
-    sender_name: 'Nguyễn Mai Anh (K18 FPT)',
-    message: 'Cầm cuốn nhật ký Đặng Thùy Trâm cũ trên tay mà nghẹn ngào. Cảm ơn nhóm Bìa Sờn Nắng Mới vì một dự án vô cùng ý nghĩa hướng về các bác thương binh Long Đất!',
-    created_at: '2026-10-05 09:30',
-    book_title: 'Nhật Ký Đặng Thùy Trâm'
-  },
-  {
-    id: 2,
-    sender_name: 'Trần Hoàng Long',
-    message: 'Vần thơ Tây Tiến vẫn luôn hào sảng như ngày nào. Chúc chiến dịch của các bạn thành công rực rỡ và quyên góp được thật nhiều cho các bác!',
-    created_at: '2026-10-05 14:15',
-    book_title: 'Tuyển Tập Thơ Quang Dũng'
-  }
-];
+export const INITIAL_GUESTBOOK: GuestbookEntry[] = [];

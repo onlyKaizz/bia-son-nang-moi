@@ -62,7 +62,6 @@ export const QRModal: React.FC<QRModalProps> = ({ book, onClose }) => {
             <div className="text-[11px] font-extrabold uppercase tracking-wider text-[#9E2A2B]">
               Bìa Sờn Nắng Mới
             </div>
-            <div className="text-[10px] text-stone-500 font-medium">Sách cũ 1970–2000</div>
           </div>
 
           {/* Canvas QR Code */}

@@ -21,10 +21,10 @@ interface AddBookModalProps {
 export const AddBookModal: React.FC<AddBookModalProps> = ({ onClose, onAddBook }) => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
-  const [publishYear, setPublishYear] = useState<number>(1985);
-  const [publisher, setPublisher] = useState('NXB Hội Nhà Văn');
-  const [price, setPrice] = useState<number>(30000);
-  const [conditionNote, setConditionNote] = useState('Bìa sờn nguyên bản, gáy đóng chỉ phục chế');
+  const [publishYear, setPublishYear] = useState<number | ''>('');
+  const [publisher, setPublisher] = useState('');
+  const [price, setPrice] = useState<number | ''>('');
+  const [conditionNote, setConditionNote] = useState('');
   const [summary, setSummary] = useState('');
   const [quote, setQuote] = useState('');
   const [coverPreview, setCoverPreview] = useState<string>('');
@@ -160,7 +160,8 @@ export const AddBookModal: React.FC<AddBookModalProps> = ({ onClose, onAddBook }
                 min={1900}
                 max={2026}
                 value={publishYear}
-                onChange={(e) => setPublishYear(Number(e.target.value))}
+                onChange={(e) => setPublishYear(e.target.value === '' ? '' : Number(e.target.value))}
+                placeholder="Ví dụ: 1985"
                 className="w-full text-sm px-3 py-2 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-stone-900"
               />
             </div>
@@ -170,10 +171,10 @@ export const AddBookModal: React.FC<AddBookModalProps> = ({ onClose, onAddBook }
               <input
                 type="number"
                 step={5000}
-                min={20000}
-                max={100000}
+                min={0}
                 value={price}
-                onChange={(e) => setPrice(Number(e.target.value))}
+                onChange={(e) => setPrice(e.target.value === '' ? '' : Number(e.target.value))}
+                placeholder="Ví dụ: 30000"
                 className="w-full text-sm px-3 py-2 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-stone-900"
               />
             </div>
