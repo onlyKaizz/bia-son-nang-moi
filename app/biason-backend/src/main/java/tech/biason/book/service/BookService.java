@@ -71,4 +71,11 @@ public class BookService {
 
         return bookRepository.save(book);
     }
+
+    @Transactional
+    public void deleteBook(Long bookId) {
+        BookEntity book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy sách với ID: " + bookId));
+        bookRepository.delete(book);
+    }
 }

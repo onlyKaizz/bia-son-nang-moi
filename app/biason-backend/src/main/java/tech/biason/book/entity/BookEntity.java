@@ -42,7 +42,8 @@ public class BookEntity {
     @Lob
     private String quote;
 
-    @Column(nullable = false, length = 500)
+    @Lob
+    @Column(nullable = false, columnDefinition = "CLOB")
     private String coverImageUrl;
 
     @Column(nullable = false, length = 20)

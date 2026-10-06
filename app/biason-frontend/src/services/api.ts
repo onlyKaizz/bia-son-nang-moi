@@ -173,5 +173,16 @@ export const api = {
     } catch {
       return false;
     }
-  }
+  },
+
+  async deleteBook(bookId: number): Promise<boolean> {
+    try {
+      const res = await fetch(`${BASE_URL}/books/${bookId}`, {
+        method: 'DELETE',
+      });
+      return res.ok;
+    } catch {
+      return false;
+    }
+  },
 };

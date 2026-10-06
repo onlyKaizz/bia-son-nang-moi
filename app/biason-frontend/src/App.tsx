@@ -141,6 +141,26 @@ export const App: React.FC = () => {
     }
   };
 
+  const handleDeleteBook = async (targetBook: Book) => {
+    if (isBackendConnected) {
+      const success = await api.deleteBook(targetBook.id);
+      if (success) {
+        setBooks(prev => prev.filter(b => b.id !== targetBook.id));
+        const [freshCamp] = await Promise.all([api.getCampaign()]);
+        setCampaign(freshCamp.campaign);
+        setCurrentRaised(freshCamp.currentRaised);
+        setBooksSoldCount(freshCamp.booksSoldCount);
+      }
+    } else {
+      const updated = books.filter(b => b.id !== targetBook.id);
+      setBooks(updated);
+      localStorage.setItem('BSNM_BOOKS', JSON.stringify(updated));
+    }
+    if (selectedBook && selectedBook.id === targetBook.id) {
+      setSelectedBook(null);
+    }
+  };
+
   const handleAddGuestbook = async (sender_name: string, message: string) => {
     if (isBackendConnected) {
       await api.addGuestbook(sender_name, message);
@@ -261,6 +281,7 @@ export const App: React.FC = () => {
                 onSelect={setSelectedBook}
                 onShowQR={setQrModalBook}
                 onToggleStatus={handleToggleStatus}
+                onDeleteBook={handleDeleteBook}
               />
             ))}
           </div>
@@ -301,6 +322,7 @@ export const App: React.FC = () => {
           }}
           isAdmin={isAdmin}
           onToggleStatus={handleToggleStatus}
+          onDeleteBook={handleDeleteBook}
         />
       )}
 
@@ -315,7 +337,6 @@ export const App: React.FC = () => {
         <AddBookModal
           onClose={() => setShowAddBookModal(false)}
           onAddBook={handleAddBook}
-          existingCategories={categories.filter(c => c !== 'ALL')}
         />
       )}
     </div>

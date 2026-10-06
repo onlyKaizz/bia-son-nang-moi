@@ -29,20 +29,16 @@ export const Header: React.FC<HeaderProps> = ({ isAdmin, setIsAdmin }) => {
   return (
     <header className="border-b border-stone-200/80 bg-white/80 backdrop-blur-md sticky top-0 z-40 shadow-xs">
       <div className="max-w-6xl mx-auto px-3.5 sm:px-6 py-3 sm:py-3.5 flex items-center justify-between gap-3">
-        {/* Brand identity with new Logo */}
-        <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
-          <div className="h-10 sm:h-12 w-10 sm:w-12 rounded-xl sm:rounded-2xl overflow-hidden bg-amber-50/60 border border-amber-900/10 flex items-center justify-center shrink-0 shadow-xs">
-            <img
-              src="/Logo.png"
-              alt="Logo Bìa Sờn Nắng Mới"
-              className="w-full h-full object-contain p-0.5"
-            />
-          </div>
-          <div className="min-w-0">
-            <h1 className="text-base sm:text-xl font-bold text-stone-900 tracking-tight leading-tight truncate">
-              Bìa Sờn Nắng Mới
-            </h1>
-          </div>
+        {/* Brand identity - Large logo with UI text */}
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <img
+            src="/Logo.png"
+            alt="Logo Bìa Sờn Nắng Mới"
+            className="h-10 sm:h-14 w-auto object-contain shrink-0"
+          />
+          <h1 className="text-base sm:text-xl font-bold text-stone-900 tracking-tight leading-tight whitespace-nowrap">
+            Bìa Sờn Nắng Mới
+          </h1>
         </div>
 
         {/* Right side controls */}

@@ -54,4 +54,10 @@ public class BookController {
         BookEntity saved = bookService.createBook(title, author, publishYear, publisher, categoryName, conditionNote, price, summary, quote, coverImageUrl, qrCode);
         return ApiResponse.ok("Thêm sách mới vào kho thành công", saved);
     }
+
+    @DeleteMapping("/{id}")
+    public ApiResponse<Void> deleteBook(@PathVariable Long id) {
+        bookService.deleteBook(id);
+        return ApiResponse.ok("Đã xóa sách thành công", null);
+    }
 }

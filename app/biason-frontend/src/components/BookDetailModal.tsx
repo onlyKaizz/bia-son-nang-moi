@@ -1,6 +1,6 @@
 import React from 'react';
 import { Book } from '../types';
-import { X, Heart, QrCode, CheckCircle2, Calendar, Building2, BookOpen } from 'lucide-react';
+import { X, Heart, QrCode, CheckCircle2, Calendar, Building2, BookOpen, Trash2 } from 'lucide-react';
 
 interface BookDetailModalProps {
   book: Book;
@@ -8,6 +8,7 @@ interface BookDetailModalProps {
   onShowQR: (book: Book) => void;
   isAdmin: boolean;
   onToggleStatus: (book: Book) => void;
+  onDeleteBook?: (book: Book) => void;
 }
 
 export const BookDetailModal: React.FC<BookDetailModalProps> = ({
@@ -16,6 +17,7 @@ export const BookDetailModal: React.FC<BookDetailModalProps> = ({
   onShowQR,
   isAdmin,
   onToggleStatus,
+  onDeleteBook,
 }) => {
   const isSold = book.status === 'SOLD';
 
@@ -143,6 +145,20 @@ export const BookDetailModal: React.FC<BookDetailModalProps> = ({
                   >
                     <CheckCircle2 className="w-4 h-4" />
                     <span>{isSold ? 'Mở bán lại' : 'Đã bán'}</span>
+                  </button>
+                )}
+                {isAdmin && onDeleteBook && (
+                  <button
+                    onClick={() => {
+                      if (window.confirm(`Bạn có chắc muốn XÓA VĨNH VIỄN sách "${book.title}" khỏi hệ thống?`)) {
+                        onDeleteBook(book);
+                        onClose();
+                      }
+                    }}
+                    className="py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-1.5 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    <span>Xóa sách</span>
                   </button>
                 )}
               </div>
