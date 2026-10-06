@@ -12,12 +12,33 @@ import { GuestbookSection } from './components/GuestbookSection';
 import { Search, Plus, BookOpen } from 'lucide-react';
 
 export const App: React.FC = () => {
-  const [books, setBooks] = useState<Book[]>(INITIAL_BOOKS);
+  const [books, setBooks] = useState<Book[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('BSNM_BOOKS');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch {}
+      }
+    }
+    return INITIAL_BOOKS;
+  });
   const [campaign, setCampaign] = useState<CharityCampaign>(INITIAL_CAMPAIGN);
   const [currentRaised, setCurrentRaised] = useState<number>(0);
   const [booksSoldCount, setBooksSoldCount] = useState<number>(0);
-  const [guestbook, setGuestbook] = useState<GuestbookEntry[]>(INITIAL_GUESTBOOK);
+  const [guestbook, setGuestbook] = useState<GuestbookEntry[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('BSNM_GUESTBOOK');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch {}
+      }
+    }
+    return INITIAL_GUESTBOOK;
+  });
   const [isBackendConnected, setIsBackendConnected] = useState<boolean>(false);
+  const [isDataLoaded, setIsDataLoaded] = useState<boolean>(false);
 
   const [isAdmin, setIsAdmin] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
@@ -44,20 +65,28 @@ export const App: React.FC = () => {
     } else {
       const savedBooks = localStorage.getItem('BSNM_BOOKS');
       if (savedBooks) {
-        const parsed = JSON.parse(savedBooks);
-        setBooks(parsed);
-        const sold = parsed.filter((b: Book) => b.status === 'SOLD');
-        setCurrentRaised(sold.reduce((sum: number, b: Book) => sum + b.price, 0));
-        setBooksSoldCount(sold.length);
+        try {
+          const parsed = JSON.parse(savedBooks);
+          setBooks(parsed);
+          const sold = parsed.filter((b: Book) => b.status === 'SOLD');
+          setCurrentRaised(sold.reduce((sum: number, b: Book) => sum + b.price, 0));
+          setBooksSoldCount(sold.length);
+        } catch {}
       } else {
         const sold = INITIAL_BOOKS.filter(b => b.status === 'SOLD');
         setCurrentRaised(sold.reduce((sum, b) => sum + b.price, 0));
         setBooksSoldCount(sold.length);
+        localStorage.setItem('BSNM_BOOKS', JSON.stringify(INITIAL_BOOKS));
       }
 
       const savedGuestbook = localStorage.getItem('BSNM_GUESTBOOK');
-      if (savedGuestbook) setGuestbook(JSON.parse(savedGuestbook));
+      if (savedGuestbook) {
+        try {
+          setGuestbook(JSON.parse(savedGuestbook));
+        } catch {}
+      }
     }
+    setIsDataLoaded(true);
   };
 
   useEffect(() => {
@@ -65,14 +94,14 @@ export const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (!isBackendConnected) {
+    if (isDataLoaded && !isBackendConnected) {
       const soldBooks = books.filter(b => b.status === 'SOLD');
       const total = soldBooks.reduce((sum, b) => sum + b.price, 0);
       setCurrentRaised(total);
       setBooksSoldCount(soldBooks.length);
       localStorage.setItem('BSNM_BOOKS', JSON.stringify(books));
     }
-  }, [books, isBackendConnected]);
+  }, [books, isBackendConnected, isDataLoaded]);
 
   const handleToggleStatus = async (targetBook: Book) => {
     const newStatus = targetBook.status === 'AVAILABLE' ? 'SOLD' : 'AVAILABLE';
