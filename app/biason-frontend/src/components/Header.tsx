@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { Shield, Lock, X, Check, Database, Wifi, LogOut } from 'lucide-react';
+import { Shield, Lock, X, Check, LogOut } from 'lucide-react';
 
 interface HeaderProps {
   isAdmin: boolean;
   setIsAdmin: (val: boolean) => void;
-  isBackendConnected: boolean;
+  isBackendConnected?: boolean;
 }
 
-export const Header: React.FC<HeaderProps> = ({ isAdmin, setIsAdmin, isBackendConnected }) => {
+export const Header: React.FC<HeaderProps> = ({ isAdmin, setIsAdmin }) => {
   const [showPinModal, setShowPinModal] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -42,30 +42,11 @@ export const Header: React.FC<HeaderProps> = ({ isAdmin, setIsAdmin, isBackendCo
             <h1 className="text-base sm:text-xl font-bold text-stone-900 tracking-tight leading-tight truncate">
               Bìa Sờn Nắng Mới
             </h1>
-            <p className="text-[11px] sm:text-xs text-stone-500 font-medium tracking-normal truncate">
-              Sách cũ 1970–2000 • Tri ân Người có công Long Đất
-            </p>
           </div>
         </div>
 
         {/* Right side controls */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          {/* Status Indicator */}
-          <div className="flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-semibold border border-stone-200 bg-stone-50/80">
-            {isBackendConnected ? (
-              <>
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <Database className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-600 hidden xs:inline" />
-                <span className="text-emerald-700 font-medium">DB Thật</span>
-              </>
-            ) : (
-              <>
-                <span className="w-2 h-2 rounded-full bg-amber-500"></span>
-                <Wifi className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-600 hidden xs:inline" />
-                <span className="text-stone-600 font-medium">Offline</span>
-              </>
-            )}
-          </div>
 
           {/* Admin Toggle */}
           {isAdmin ? (

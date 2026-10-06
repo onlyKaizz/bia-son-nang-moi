@@ -171,14 +171,14 @@ export const App: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen bg-[#FBF9F5] text-stone-900 font-sans selection:bg-[#9E2A2B] selection:text-white pb-12">
+    <div className="min-h-screen flex flex-col bg-[#FBF9F5] text-stone-900 font-sans selection:bg-[#9E2A2B] selection:text-white">
       <Header
         isAdmin={isAdmin}
         setIsAdmin={setIsAdmin}
         isBackendConnected={isBackendConnected}
       />
 
-      <main className="max-w-6xl mx-auto px-3.5 sm:px-6 py-6 sm:py-8 space-y-8 sm:space-y-12">
+      <main className="flex-1 max-w-6xl mx-auto px-3.5 sm:px-6 py-6 sm:py-8 space-y-8 sm:space-y-12 w-full">
         {/* Real-time Charity Banner */}
         <CharityBanner
           campaign={campaign}
@@ -194,7 +194,7 @@ export const App: React.FC = () => {
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-xl sm:text-2xl font-bold text-stone-900 tracking-tight">
-                  Tủ Sách Hoài Niệm (1970 – 2000)
+                  Tủ Sách Hoài Niệm
                 </h2>
                 <span className="text-xs font-semibold px-2 py-0.5 bg-stone-100 text-stone-700 rounded-full border border-stone-200">
                   {filteredBooks.length} cuốn
@@ -281,14 +281,11 @@ export const App: React.FC = () => {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-stone-200 bg-white text-stone-600 py-8 mt-12 text-xs">
+      <footer className="mt-auto border-t border-stone-200/80 bg-white text-stone-600 py-6 text-xs w-full">
         <div className="max-w-6xl mx-auto px-4 text-center space-y-1.5">
           <p className="font-bold text-stone-900 text-sm tracking-tight">DỰ ÁN BÌA SỜN NẮNG MỚI • MÔN HỌC SSG105 (ĐẠI HỌC FPT)</p>
           <p className="text-stone-500 font-medium">
             100% lợi nhuận thu được gửi tặng Trung tâm Điều dưỡng Thương binh và Người có công Long Đất
-          </p>
-          <p className="text-[11px] text-stone-400 pt-1">
-            Hệ thống Fullstack: React 18 + TypeScript + Spring Boot 3 + H2 Database
           </p>
         </div>
       </footer>
