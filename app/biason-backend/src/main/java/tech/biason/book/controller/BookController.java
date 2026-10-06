@@ -36,4 +36,22 @@ public class BookController {
         BookEntity updated = bookService.updateStatus(id, status);
         return ApiResponse.ok("Cập nhật trạng thái sách thành công", updated);
     }
+
+    @PostMapping
+    public ApiResponse<BookEntity> createBook(@RequestBody Map<String, Object> body) {
+        String title = (String) body.get("title");
+        String author = (String) body.get("author");
+        Integer publishYear = body.get("publishYear") != null ? Integer.valueOf(body.get("publishYear").toString()) : null;
+        String publisher = (String) body.get("publisher");
+        String categoryName = body.get("category") != null ? (String) body.get("category") : "Ký sự & Hồi ức Chiến trường";
+        String conditionNote = (String) body.get("conditionNote");
+        Integer price = body.get("price") != null ? Integer.valueOf(body.get("price").toString()) : 30000;
+        String summary = (String) body.get("summary");
+        String quote = (String) body.get("quote");
+        String coverImageUrl = (String) body.get("coverImageUrl");
+        String qrCode = (String) body.get("qrCode");
+
+        BookEntity saved = bookService.createBook(title, author, publishYear, publisher, categoryName, conditionNote, price, summary, quote, coverImageUrl, qrCode);
+        return ApiResponse.ok("Thêm sách mới vào kho thành công", saved);
+    }
 }

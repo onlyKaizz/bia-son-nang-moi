@@ -1,6 +1,6 @@
 import React from 'react';
 import { Book } from '../types';
-import { QrCode, CheckCircle2 } from 'lucide-react';
+import { QrCode, CheckCircle2, Eye } from 'lucide-react';
 
 interface BookCardProps {
   book: Book;
@@ -20,87 +20,98 @@ export const BookCard: React.FC<BookCardProps> = ({
   const isSold = book.status === 'SOLD';
 
   return (
-    <div className={`bg-[#FDFBF7] border rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col ${
-      isSold ? 'border-gray-300 opacity-80' : 'border-[#D8C7B0]'
+    <div className={`group bg-white border rounded-2xl overflow-hidden shadow-xs hover:shadow-lg transition-all duration-300 flex flex-col ${
+      isSold ? 'border-stone-200 opacity-85' : 'border-stone-200 hover:border-amber-900/30'
     }`}>
-      {/* Book Cover Image */}
-      <div className="relative h-56 bg-[#EBE4D5] overflow-hidden group cursor-pointer" onClick={() => onSelect(book)}>
+      {/* Cover Image Container */}
+      <div className="relative aspect-[3/4] w-full bg-stone-100 overflow-hidden cursor-pointer" onClick={() => onSelect(book)}>
         <img
           src={book.cover_image_url}
           alt={book.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          loading="lazy"
         />
-        {/* Year Badge */}
-        <div className="absolute top-2 left-2 bg-[#3D2F24]/85 text-[#F6F0E6] text-[10px] font-semibold px-2 py-0.5 rounded shadow backdrop-blur">
+
+        {/* Vintage Year Badge */}
+        <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-xs text-white text-[10px] font-semibold px-2 py-0.5 rounded-md shadow-xs">
           Năm {book.publish_year}
         </div>
 
         {/* Status Badge */}
-        {isSold ? (
-          <div className="absolute top-2 right-2 bg-gray-700/90 text-white text-[11px] font-bold px-2 py-0.5 rounded shadow flex items-center gap-1">
-            <CheckCircle2 className="w-3.5 h-3.5 text-green-400" />
-            <span>Đã bán</span>
-          </div>
-        ) : (
-          <div className="absolute top-2 right-2 bg-[#9E2A2B] text-white text-[11px] font-bold px-2 py-0.5 rounded shadow">
-            {book.price.toLocaleString('vi-VN')} đ
-          </div>
-        )}
+        <div className="absolute top-2 right-2">
+          {isSold ? (
+            <span className="inline-flex items-center gap-1 bg-stone-800/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-xs">
+              <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+              ĐÃ BÁN
+            </span>
+          ) : (
+            <span className="bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-xs">
+              CÒN SÁCH
+            </span>
+          )}
+        </div>
 
-        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-          <span className="text-white text-xs font-medium bg-[#3D2F24]/80 px-3 py-1.5 rounded-full backdrop-blur">
-            Xem câu chuyện & trích dẫn
+        {/* Category Pill */}
+        <div className="absolute bottom-2 left-2 right-2">
+          <span className="bg-white/90 backdrop-blur-xs text-stone-800 text-[10px] font-semibold px-2 py-0.5 rounded-md shadow-xs truncate block max-w-full">
+            {book.category}
           </span>
         </div>
       </div>
 
-      {/* Book Information */}
-      <div className="p-4 flex-1 flex flex-col justify-between">
+      {/* Card Content */}
+      <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between space-y-2">
         <div>
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-[#C58940] block mb-0.5">
-            {book.category}
-          </span>
           <h3
             onClick={() => onSelect(book)}
-            className="font-serif font-bold text-base text-[#3D2F24] hover:text-[#9E2A2B] transition cursor-pointer line-clamp-1"
+            className="text-xs sm:text-sm font-bold text-stone-900 tracking-tight line-clamp-2 leading-snug cursor-pointer hover:text-[#9E2A2B] transition"
+            title={book.title}
           >
             {book.title}
           </h3>
-          <p className="text-xs text-[#7A6B5D] mb-2">Tác giả: <strong className="text-[#3D2F24]">{book.author}</strong></p>
-          <p className="text-xs text-[#543D2B] line-clamp-2 italic font-serif text-[11.5px] border-l-2 border-[#D8C7B0] pl-2 mb-3">
-            "{book.quote || book.summary}"
+          <p className="text-[11px] text-stone-500 font-medium truncate mt-0.5">
+            {book.author}
           </p>
         </div>
 
-        {/* Action Buttons */}
-        <div className="pt-2 border-t border-[#D8C7B0]/60 flex items-center justify-between gap-2">
-          <button
-            onClick={() => onShowQR(book)}
-            className="flex items-center gap-1 text-xs text-[#7A6B5D] hover:text-[#9E2A2B] px-2 py-1 rounded bg-[#F6F0E6] hover:bg-[#EAE1D2] transition"
-            title="In mã QR Bookmark"
-          >
-            <QrCode className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Mã QR</span>
-          </button>
+        {/* Price & Action Buttons */}
+        <div className="pt-2 border-t border-stone-100 space-y-2">
+          <div className="flex items-baseline justify-between">
+            <span className="text-[10px] text-stone-500 font-medium">Giá quyên góp</span>
+            <span className="text-xs sm:text-sm font-extrabold text-[#9E2A2B] tracking-tight">
+              {book.price.toLocaleString('vi-VN')} đ
+            </span>
+          </div>
 
-          <button
-            onClick={() => onSelect(book)}
-            className="flex-1 text-xs font-semibold text-center py-1.5 px-3 rounded bg-[#FAF6EE] border border-[#D8C7B0] text-[#3D2F24] hover:bg-[#9E2A2B] hover:text-white hover:border-[#9E2A2B] transition"
-          >
-            Chi tiết sách
-          </button>
+          <div className="grid grid-cols-2 gap-1.5">
+            <button
+              onClick={() => onSelect(book)}
+              className="flex items-center justify-center gap-1 py-1.5 px-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-800 text-[11px] font-semibold transition active:scale-95"
+            >
+              <Eye className="w-3 h-3 text-stone-600" />
+              <span>Chi tiết</span>
+            </button>
 
+            <button
+              onClick={() => onShowQR(book)}
+              className="flex items-center justify-center gap-1 py-1.5 px-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200/60 text-[11px] font-semibold transition active:scale-95"
+            >
+              <QrCode className="w-3 h-3 text-amber-700" />
+              <span>Bookmark</span>
+            </button>
+          </div>
+
+          {/* Admin Toggle Button */}
           {isAdmin && (
             <button
               onClick={() => onToggleStatus(book)}
-              className={`text-xs px-2 py-1 rounded font-bold border transition ${
+              className={`w-full py-1.5 rounded-xl text-[11px] font-bold transition flex items-center justify-center gap-1 ${
                 isSold
-                  ? 'bg-yellow-100 text-yellow-800 border-yellow-300 hover:bg-yellow-200'
-                  : 'bg-green-100 text-green-800 border-green-300 hover:bg-green-200'
+                  ? 'bg-amber-100 hover:bg-amber-200 text-amber-900'
+                  : 'bg-emerald-600 hover:bg-emerald-700 text-white'
               }`}
-              title="Đổi trạng thái bán"
             >
-              {isSold ? 'Mở lại' : 'Chốt Bán'}
+              {isSold ? 'Đổi sang: Còn Sách' : 'Đánh dấu: ĐÃ BÁN'}
             </button>
           )}
         </div>

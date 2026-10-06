@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, Landmark, TrendingUp, CheckCircle2 } from 'lucide-react';
+import { Heart, Landmark, CheckCircle2 } from 'lucide-react';
 import { CharityCampaign } from '../types';
 
 interface CharityBannerProps {
@@ -18,56 +18,57 @@ export const CharityBanner: React.FC<CharityBannerProps> = ({
   const percent = Math.min(100, Math.round((currentRaised / campaign.target_amount) * 100));
 
   return (
-    <div className="bg-[#FAF6EE] border border-[#D8C7B0] rounded-2xl p-5 md:p-6 shadow-sm mb-8 relative overflow-hidden">
-      {/* Decorative vintage stamp badge */}
-      <div className="absolute top-3 right-3 sm:top-5 sm:right-5 bg-[#9E2A2B] text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow border-2 border-white flex items-center gap-1">
-        <Heart className="w-3.5 h-3.5 fill-white" />
-        <span>100% Gây Quỹ Tri Ân</span>
+    <div className="bg-gradient-to-br from-[#FAF7F2] to-[#F5ECE1] border border-[#E3D7C5] rounded-3xl p-4 sm:p-7 shadow-sm relative overflow-hidden">
+      {/* Decorative Stamp Badge */}
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-3 sm:mb-4">
+        <div className="inline-flex items-center gap-1.5 bg-[#9E2A2B] text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-xs">
+          <Heart className="w-3.5 h-3.5 fill-white" />
+          <span>100% Lợi Nhuận Thiện Nguyện</span>
+        </div>
+        <span className="text-[11px] sm:text-xs font-semibold text-stone-500 bg-white/70 px-2.5 py-1 rounded-full border border-stone-200">
+          Mục tiêu: {campaign.target_amount.toLocaleString('vi-VN')} đ
+        </span>
       </div>
 
-      <div className="max-w-3xl">
-        <div className="flex items-center gap-2 text-xs font-semibold text-[#9E2A2B] mb-1">
-          <Landmark className="w-4 h-4" />
-          <span>ĐƠN VỊ THỤ HƯỞNG CHIẾN DỊCH</span>
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 items-center">
+        {/* Beneficiary Info */}
+        <div className="md:col-span-7 space-y-1.5">
+          <h2 className="text-lg sm:text-2xl font-bold text-stone-900 tracking-tight leading-snug">
+            {campaign.campaign_name}
+          </h2>
+          <div className="flex items-start gap-2 text-xs sm:text-sm text-stone-600 font-medium">
+            <Landmark className="w-4 h-4 text-[#9E2A2B] shrink-0 mt-0.5" />
+            <p className="leading-relaxed">
+              <span className="font-bold text-stone-800">Đơn vị thụ hưởng: </span>
+              {campaign.beneficiary_name} — {campaign.beneficiary_address}
+            </p>
+          </div>
         </div>
-        <h2 className="text-lg md:text-2xl font-serif font-bold text-[#3D2F24] mb-1">
-          {campaign.beneficiary_name}
-        </h2>
-        <p className="text-xs md:text-sm text-[#7A6B5D] mb-4">
-          Địa chỉ: {campaign.beneficiary_address}
-        </p>
 
-        {/* Progress Bar */}
-        <div className="space-y-2">
-          <div className="flex justify-between items-baseline text-xs md:text-sm">
-            <span className="font-semibold text-[#3D2F24] flex items-center gap-1">
-              <TrendingUp className="w-4 h-4 text-[#C58940]" />
-              Tiến độ gây quỹ: <strong className="text-[#9E2A2B] text-base">{currentRaised.toLocaleString('vi-VN')} đ</strong> / {campaign.target_amount.toLocaleString('vi-VN')} đ
+        {/* Progress Stats Card */}
+        <div className="md:col-span-5 bg-white/90 backdrop-blur-xs border border-[#DFD1BE] rounded-2xl p-3.5 sm:p-4 shadow-xs space-y-3">
+          <div className="flex items-baseline justify-between">
+            <span className="text-xs font-semibold text-stone-500">Đã gây quỹ</span>
+            <span className="text-lg sm:text-2xl font-extrabold text-[#9E2A2B] tracking-tight">
+              {currentRaised.toLocaleString('vi-VN')} đ
             </span>
-            <span className="font-bold text-[#9E2A2B]">{percent}%</span>
           </div>
 
-          <div className="w-full bg-[#E8DEC8] h-3.5 rounded-full overflow-hidden p-0.5 border border-[#D8C7B0]">
-            <div
-              className="bg-gradient-to-r from-[#C58940] to-[#9E2A2B] h-full rounded-full transition-all duration-700 shadow-inner"
-              style={{ width: `${percent}%` }}
-            />
-          </div>
-        </div>
-
-        {/* Counters */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4 pt-3 border-t border-[#D8C7B0]/60 text-xs">
-          <div>
-            <span className="text-[#7A6B5D] block">Sách đã trao đi:</span>
-            <strong className="text-sm text-[#3D2F24]">{booksSoldCount} cuốn</strong>
-          </div>
-          <div>
-            <span className="text-[#7A6B5D] block">Sách còn trong kho:</span>
-            <strong className="text-sm text-[#3D2F24]">{totalBooks - booksSoldCount} cuốn</strong>
-          </div>
-          <div className="col-span-2 sm:col-span-1 flex items-center gap-1 text-[#9E2A2B] font-medium">
-            <CheckCircle2 className="w-4 h-4 shrink-0" />
-            <span>Minh bạch theo thời gian thực</span>
+          {/* Progress Bar */}
+          <div className="space-y-1.5">
+            <div className="w-full bg-stone-100 rounded-full h-3 overflow-hidden p-0.5 border border-stone-200">
+              <div
+                className="bg-gradient-to-r from-amber-600 to-[#9E2A2B] h-full rounded-full transition-all duration-700 ease-out shadow-xs"
+                style={{ width: `${Math.max(5, percent)}%` }}
+              ></div>
+            </div>
+            <div className="flex justify-between text-[11px] font-semibold text-stone-600">
+              <span className="flex items-center gap-1">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                Đã bán: <b className="text-stone-900">{booksSoldCount}</b>/{totalBooks} cuốn
+              </span>
+              <span className="text-[#9E2A2B] font-bold">{percent}% tiến độ</span>
+            </div>
           </div>
         </div>
       </div>

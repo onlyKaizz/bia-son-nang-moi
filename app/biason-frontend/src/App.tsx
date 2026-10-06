@@ -7,8 +7,9 @@ import { CharityBanner } from './components/CharityBanner';
 import { BookCard } from './components/BookCard';
 import { BookDetailModal } from './components/BookDetailModal';
 import { QRModal } from './components/QRModal';
+import { AddBookModal } from './components/AddBookModal';
 import { GuestbookSection } from './components/GuestbookSection';
-import { Search, Filter } from 'lucide-react';
+import { Search, Plus, BookOpen } from 'lucide-react';
 
 export const App: React.FC = () => {
   const [books, setBooks] = useState<Book[]>(INITIAL_BOOKS);
@@ -21,6 +22,7 @@ export const App: React.FC = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [qrModalBook, setQrModalBook] = useState<Book | null>(null);
+  const [showAddBookModal, setShowAddBookModal] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
@@ -97,6 +99,48 @@ export const App: React.FC = () => {
     }
   };
 
+  const handleAddBook = async (bookData: {
+    title: string;
+    author: string;
+    publish_year: number;
+    publisher: string;
+    category: string;
+    price: number;
+    condition_note: string;
+    summary: string;
+    quote: string;
+    cover_image_url: string;
+    qr_code?: string;
+  }) => {
+    if (isBackendConnected) {
+      const created = await api.createBook(bookData);
+      if (created) {
+        setBooks(prev => [created, ...prev]);
+      } else {
+        await loadData();
+      }
+    } else {
+      const newBook: Book = {
+        id: Date.now(),
+        qr_code: `BSNM-${String(books.length + 1).padStart(3, '0')}`,
+        title: bookData.title,
+        author: bookData.author,
+        publish_year: bookData.publish_year,
+        publisher: bookData.publisher,
+        category: bookData.category,
+        price: bookData.price,
+        condition_note: bookData.condition_note,
+        summary: bookData.summary,
+        quote: bookData.quote,
+        cover_image_url: bookData.cover_image_url,
+        status: 'AVAILABLE'
+      };
+      const updated = [newBook, ...books];
+      setBooks(updated);
+      localStorage.setItem('BSNM_BOOKS', JSON.stringify(updated));
+    }
+  };
+
   const handleAddGuestbook = async (sender_name: string, message: string) => {
     if (isBackendConnected) {
       await api.addGuestbook(sender_name, message);
@@ -127,14 +171,15 @@ export const App: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen bg-[#fcfaf4] text-amber-950 font-sans selection:bg-amber-900 selection:text-amber-50">
+    <div className="min-h-screen bg-[#FBF9F5] text-stone-900 font-sans selection:bg-[#9E2A2B] selection:text-white pb-12">
       <Header
         isAdmin={isAdmin}
         setIsAdmin={setIsAdmin}
         isBackendConnected={isBackendConnected}
       />
 
-      <main className="max-w-6xl mx-auto px-4 py-8 space-y-12">
+      <main className="max-w-6xl mx-auto px-3.5 sm:px-6 py-6 sm:py-8 space-y-8 sm:space-y-12">
+        {/* Real-time Charity Banner */}
         <CharityBanner
           campaign={campaign}
           currentRaised={currentRaised}
@@ -142,50 +187,72 @@ export const App: React.FC = () => {
           totalBooks={books.length}
         />
 
-        <section className="space-y-6">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-amber-900/15 pb-4">
+        {/* Section: Tủ Sách Xưa Phục Chế */}
+        <section className="space-y-5">
+          {/* Header & Controls */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-stone-200">
             <div>
-              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-amber-950 flex items-center gap-3">
-                <span>Tủ Sách Hoài Niệm (1970 – 2000)</span>
-                <span className="text-xs font-sans font-normal px-2.5 py-1 bg-amber-900/10 text-amber-900 rounded-full border border-amber-900/10">
+              <div className="flex items-center gap-2">
+                <h2 className="text-xl sm:text-2xl font-bold text-stone-900 tracking-tight">
+                  Tủ Sách Hoài Niệm (1970 – 2000)
+                </h2>
+                <span className="text-xs font-semibold px-2 py-0.5 bg-stone-100 text-stone-700 rounded-full border border-stone-200">
                   {filteredBooks.length} cuốn
                 </span>
-              </h2>
-              <p className="text-sm text-amber-800/80 mt-1 font-serif italic">
-                "Mỗi cuốn sách cũ là một mảnh ghép lịch sử, một lời tri ấn thiêng liêng gửi tới các thế hệ cha anh."
+              </div>
+              <p className="text-xs sm:text-sm text-stone-500 mt-0.5">
+                Mỗi cuốn sách cũ là một mảnh ghép lịch sử, trao đi nghĩa tình thiêng liêng
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-3">
-              <div className="relative">
-                <Search className="w-4 h-4 text-amber-800/60 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  placeholder="Tìm tên sách, tác giả..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 pr-4 py-2 rounded-xl text-xs bg-amber-50/90 border border-amber-900/20 focus:outline-none focus:ring-2 focus:ring-amber-800 w-full sm:w-56"
-                />
-              </div>
+            {/* Admin Add Book Button */}
+            {isAdmin && (
+              <button
+                onClick={() => setShowAddBookModal(true)}
+                className="flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#9E2A2B] hover:bg-[#852223] text-white text-xs sm:text-sm font-semibold shadow-xs transition active:scale-95 shrink-0"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Thêm Sách Mới</span>
+              </button>
+            )}
+          </div>
 
-              <div className="relative">
-                <Filter className="w-4 h-4 text-amber-800/60 absolute left-3 top-1/2 -translate-y-1/2" />
-                <select
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="pl-9 pr-8 py-2 rounded-xl text-xs bg-amber-50/90 border border-amber-900/20 focus:outline-none focus:ring-2 focus:ring-amber-800 appearance-none cursor-pointer w-full"
-                >
-                  {categories.map((c) => (
-                    <option key={c} value={c}>
-                      {c === 'ALL' ? 'Tất cả thể loại' : c}
-                    </option>
-                  ))}
-                </select>
-              </div>
+          {/* Search bar & Horizontal Scrollable Category Pills (Mobile-First) */}
+          <div className="space-y-3">
+            <div className="relative">
+              <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="Tìm tên sách, tác giả, nhà xuất bản..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 rounded-2xl text-xs sm:text-sm bg-white border border-stone-200/90 focus:outline-none focus:ring-2 focus:ring-stone-900 shadow-xs"
+              />
+            </div>
+
+            {/* Horizontal Scrollable Category Pills */}
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+              {categories.map((c) => {
+                const isSelected = selectedCategory === c;
+                return (
+                  <button
+                    key={c}
+                    onClick={() => setSelectedCategory(c)}
+                    className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition active:scale-95 ${
+                      isSelected
+                        ? 'bg-stone-900 text-white shadow-xs'
+                        : 'bg-white text-stone-700 border border-stone-200 hover:bg-stone-50'
+                    }`}
+                  >
+                    {c === 'ALL' ? 'Tất cả' : c}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {/* Books Grid: 2 Columns on Mobile, 4 Columns on Desktop */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
             {filteredBooks.map((book) => (
               <BookCard
                 key={book.id}
@@ -199,30 +266,34 @@ export const App: React.FC = () => {
           </div>
 
           {filteredBooks.length === 0 && (
-            <div className="text-center py-12 border border-dashed border-amber-900/20 rounded-2xl bg-amber-50/40">
-              <p className="text-amber-800/70 font-serif text-sm">Không tìm thấy cuốn sách nào phù hợp với từ khóa.</p>
+            <div className="text-center py-12 border border-dashed border-stone-200 rounded-3xl bg-white p-6">
+              <BookOpen className="w-10 h-10 text-stone-300 mx-auto mb-2" />
+              <p className="text-stone-500 text-sm font-medium">Không tìm thấy cuốn sách nào phù hợp với bộ lọc hiện tại.</p>
             </div>
           )}
         </section>
 
+        {/* Section: Sổ Lưu Bút Tri Ân */}
         <GuestbookSection
           entries={guestbook}
           onAddEntry={(name, msg) => handleAddGuestbook(name, msg)}
         />
       </main>
 
-      <footer className="border-t border-amber-900/15 bg-amber-900 text-amber-100/90 py-8 mt-16 font-serif">
-        <div className="max-w-6xl mx-auto px-4 text-center space-y-2">
-          <p className="text-base font-bold tracking-wide">DỰ ÁN BÌA SỜN NẮNG MỚI • MÔN HỌC SSG105 (ĐẠI HỌC FPT)</p>
-          <p className="text-xs text-amber-200/80 font-sans">
-            Toàn bộ 100% lợi nhuận thu được được gửi tặng Trung tâm Điều dưỡng Thương binh và Người có công Long Đất
+      {/* Footer */}
+      <footer className="border-t border-stone-200 bg-white text-stone-600 py-8 mt-12 text-xs">
+        <div className="max-w-6xl mx-auto px-4 text-center space-y-1.5">
+          <p className="font-bold text-stone-900 text-sm tracking-tight">DỰ ÁN BÌA SỜN NẮNG MỚI • MÔN HỌC SSG105 (ĐẠI HỌC FPT)</p>
+          <p className="text-stone-500 font-medium">
+            100% lợi nhuận thu được gửi tặng Trung tâm Điều dưỡng Thương binh và Người có công Long Đất
           </p>
-          <p className="text-[11px] text-amber-300/60 font-sans pt-2">
-            Hệ thống Fullstack: React 18 + TypeScript + Spring Boot 3 + H2 Persistent Database
+          <p className="text-[11px] text-stone-400 pt-1">
+            Hệ thống Fullstack: React 18 + TypeScript + Spring Boot 3 + H2 Database
           </p>
         </div>
       </footer>
 
+      {/* Modals */}
       {selectedBook && (
         <BookDetailModal
           book={selectedBook}
@@ -240,6 +311,14 @@ export const App: React.FC = () => {
         <QRModal
           book={qrModalBook}
           onClose={() => setQrModalBook(null)}
+        />
+      )}
+
+      {showAddBookModal && (
+        <AddBookModal
+          onClose={() => setShowAddBookModal(false)}
+          onAddBook={handleAddBook}
+          existingCategories={categories.filter(c => c !== 'ALL')}
         />
       )}
     </div>

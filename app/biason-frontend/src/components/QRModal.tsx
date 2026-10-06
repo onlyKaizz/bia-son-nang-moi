@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import QRCode from 'qrcode';
 import { Book } from '../types';
 import { X, Printer, Heart } from 'lucide-react';
@@ -9,19 +9,23 @@ interface QRModalProps {
 }
 
 export const QRModal: React.FC<QRModalProps> = ({ book, onClose }) => {
-  const [qrUrl, setQrUrl] = useState<string>('');
-
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  
   useEffect(() => {
-    // Generate QR pointing to book's hash route
-    const targetUrl = `${window.location.origin}${window.location.pathname}#${book.qr_code}`;
-    QRCode.toDataURL(targetUrl, {
-      width: 260,
-      margin: 1,
-      color: {
-        dark: '#3D2F24',
-        light: '#FFFFFF'
-      }
-    }).then(setQrUrl);
+    // URL encoded for bookmark
+    const currentOrigin = window.location.origin;
+    const targetUrl = `${currentOrigin}/#book-${book.qr_code}`;
+    
+    if (canvasRef.current) {
+      QRCode.toCanvas(canvasRef.current, targetUrl, {
+        width: 150,
+        margin: 1,
+        color: {
+          dark: '#2A1B12',
+          light: '#FDFBF7',
+        },
+      });
+    }
   }, [book]);
 
   const handlePrint = () => {
@@ -29,49 +33,70 @@ export const QRModal: React.FC<QRModalProps> = ({ book, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-[#FDFBF7] border border-[#D8C7B0] rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl relative">
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-y-auto animate-in fade-in duration-150">
+      <div className="bg-white border border-stone-200 rounded-t-3xl sm:rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl relative flex flex-col items-center">
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 p-1"
+          className="absolute top-4 right-4 p-2 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition"
         >
           <X className="w-5 h-5" />
         </button>
 
-        {/* Bookmark Printable Card Preview */}
-        <div className="border-2 border-dashed border-[#C58940] rounded-xl p-4 bg-[#FAF6EE] shadow-inner mb-4">
-          <div className="flex items-center justify-center gap-1.5 text-xs font-serif font-bold text-[#9E2A2B] uppercase tracking-wider mb-2">
-            <Heart className="w-3.5 h-3.5 fill-[#9E2A2B]" />
-            <span>Bìa Sờn Nắng Mới</span>
-          </div>
-
-          <h3 className="font-serif font-bold text-sm text-[#3D2F24] line-clamp-1 mb-0.5">
-            {book.title}
-          </h3>
-          <p className="text-[11px] text-[#7A6B5D] mb-3">{book.author} ({book.publish_year})</p>
-
-          <div className="bg-white p-2.5 rounded-lg border border-[#D8C7B0] inline-block shadow-sm mb-3">
-            {qrUrl && <img src={qrUrl} alt={book.title} className="w-44 h-44 object-contain" />}
-          </div>
-
-          <p className="text-[10px] text-[#7A6B5D] leading-tight">
-            Quét mã để đọc câu chuyện cuốn sách & hành trình ủng hộ Trung tâm Thương binh Long Đất
-          </p>
+        <div className="text-center mb-4">
+          <h3 className="text-lg font-bold text-stone-900 tracking-tight">Thẻ Đánh Dấu Sách (Bookmark)</h3>
+          <p className="text-xs text-stone-500 mt-0.5">Kẹp trực tiếp vào sách thật để người mua quét mã</p>
         </div>
 
-        <div className="flex gap-2">
-          <button
-            onClick={handlePrint}
-            className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-[#9E2A2B] hover:bg-[#802223] text-white text-xs font-semibold shadow transition"
-          >
-            <Printer className="w-4 h-4" />
-            <span>In Bookmark Này</span>
-          </button>
+        {/* Vintage Physical Bookmark Simulation */}
+        <div className="w-56 bg-[#FAF6EE] border-2 border-[#D8C7B0] rounded-2xl p-4 shadow-md flex flex-col items-center text-center space-y-3 relative overflow-hidden">
+          {/* Top Hole for Ribbon */}
+          <div className="w-4 h-4 rounded-full border border-stone-400 bg-stone-200/80 shadow-inner flex items-center justify-center">
+            <div className="w-1.5 h-1.5 rounded-full bg-stone-800"></div>
+          </div>
+
+          <div className="w-10 h-10 rounded-full overflow-hidden bg-white border border-stone-200 p-0.5 flex items-center justify-center shadow-xs">
+            <img src="/Logo.png" alt="Logo" className="w-full h-full object-contain" />
+          </div>
+
+          <div>
+            <div className="text-[11px] font-extrabold uppercase tracking-wider text-[#9E2A2B]">
+              Bìa Sờn Nắng Mới
+            </div>
+            <div className="text-[10px] text-stone-500 font-medium">Sách cũ 1970–2000</div>
+          </div>
+
+          {/* Canvas QR Code */}
+          <div className="p-2 bg-white rounded-xl border border-stone-200 shadow-xs">
+            <canvas ref={canvasRef} className="rounded-lg"></canvas>
+          </div>
+
+          <div className="space-y-0.5">
+            <div className="text-[11px] font-bold text-stone-900 leading-tight line-clamp-1">
+              {book.title}
+            </div>
+            <div className="text-[10px] font-mono text-stone-500">Mã: {book.qr_code}</div>
+          </div>
+
+          <div className="text-[9px] text-[#9E2A2B] font-semibold border-t border-stone-200/80 pt-2 flex items-center justify-center gap-1">
+            <Heart className="w-2.5 h-2.5 fill-[#9E2A2B]" />
+            <span>Tri ân TTĐDTB Long Đất</span>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="w-full mt-5 flex gap-2.5">
           <button
             onClick={onClose}
-            className="py-2 px-3 rounded-lg border border-[#D8C7B0] text-xs font-semibold text-[#7A6B5D] hover:bg-[#F6F0E6]"
+            className="flex-1 py-2.5 rounded-xl border border-stone-200 text-stone-700 font-semibold text-xs sm:text-sm hover:bg-stone-50 transition"
           >
             Đóng
+          </button>
+          <button
+            onClick={handlePrint}
+            className="flex-1 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-semibold text-xs sm:text-sm transition flex items-center justify-center gap-1.5 shadow-sm active:scale-98"
+          >
+            <Printer className="w-4 h-4" />
+            <span>In Bookmark</span>
           </button>
         </div>
       </div>
