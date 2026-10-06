@@ -1,0 +1,18 @@
+openapi: 3.0.3
+info:
+  title: Bìa Sờn Nắng Mới API Contract
+  version: 1.0.0
+  description: API hợp đồng phục vụ dự án sách cũ tri ân thương binh liệt sĩ SSG105
+paths:
+  /api/books:
+    get:
+      summary: Lấy danh mục sách
+      responses:
+        '200':
+          description: Thành công
+  /api/campaign:
+    get:
+      summary: Lấy tiến độ gây quỹ Long Đất
+      responses:
+        '200':
+          description: Thành công

@@ -1,0 +1,16 @@
+name: Nhiệm vụ môn học SSG105
+description: Phân công công việc cho các thành viên trong nhóm
+labels: ["ssg105"]
+body:
+  - type: input
+    id: task-name
+    attributes:
+      label: Tên nhiệm vụ
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Nội dung thực hiện và tiêu chí hoàn thành
+    validations:
+      required: true

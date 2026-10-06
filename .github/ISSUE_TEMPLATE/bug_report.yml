@@ -1,0 +1,16 @@
+name: Báo cáo lỗi
+description: Thông báo về một lỗi kỹ thuật trong ứng dụng hoặc tài liệu
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Hiện tượng lỗi xảy ra
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Kết quả kỳ vọng
+    validations:
+      required: true

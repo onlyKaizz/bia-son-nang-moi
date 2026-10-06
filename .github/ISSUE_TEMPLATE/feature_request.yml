@@ -1,0 +1,20 @@
+name: Đề xuất tính năng mới
+description: Đề xuất chức năng hoặc cải tiến cho dự án Bìa Sờn Nắng Mới
+labels: ["feature"]
+body:
+  - type: markdown
+    attributes:
+      value: Cảm ơn bạn đã đóng góp ý tưởng cho dự án Bìa Sờn Nắng Mới!
+  - type: input
+    id: title
+    attributes:
+      label: Tên tính năng đề xuất
+      placeholder: "Ví dụ: Thêm tính năng chia sẻ bookmark lên mạng xã hội"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Mô tả chi tiết và giá trị mang lại
+    validations:
+      required: true
