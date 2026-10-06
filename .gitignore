@@ -34,3 +34,10 @@ lerna-debug.log*
 *.sw?
 .DS_Store
 Thumbs.db
+
+# Backend build & db files
+app/biason-backend/target/
+app/biason-backend/data/
+*.db
+*.mv.db
+*.lock.db
