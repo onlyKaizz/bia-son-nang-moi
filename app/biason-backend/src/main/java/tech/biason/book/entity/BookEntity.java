@@ -35,11 +35,10 @@ public class BookEntity {
     @Column(nullable = false)
     private Integer price;
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String summary;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String quote;
 
     @Column(nullable = false, columnDefinition = "TEXT")

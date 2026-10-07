@@ -15,8 +15,7 @@ public class GuestbookEntity {
 
     private Long bookId;
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String message;
 
     private LocalDateTime createdAt = LocalDateTime.now();
