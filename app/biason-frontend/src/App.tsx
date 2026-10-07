@@ -8,6 +8,7 @@ import { BookCard } from './components/BookCard';
 import { BookDetailModal } from './components/BookDetailModal';
 import { QRModal } from './components/QRModal';
 import { AddBookModal } from './components/AddBookModal';
+import { EditBookModal } from './components/EditBookModal';
 import { GuestbookSection } from './components/GuestbookSection';
 import { Search, Plus, BookOpen } from 'lucide-react';
 
@@ -42,6 +43,7 @@ export const App: React.FC = () => {
 
   const [isAdmin, setIsAdmin] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+  const [editingBook, setEditingBook] = useState<Book | null>(null);
   const [qrModalBook, setQrModalBook] = useState<Book | null>(null);
   const [showAddBookModal, setShowAddBookModal] = useState(false);
 
@@ -169,6 +171,37 @@ export const App: React.FC = () => {
     }
   };
 
+  const handleUpdateBook = async (updatedData: {
+    id: number;
+    title: string;
+    author: string;
+    publish_year: number;
+    publisher: string;
+    category: string;
+    price: number;
+    condition_note: string;
+    summary: string;
+    quote: string;
+    cover_image_url: string;
+  }) => {
+    if (isBackendConnected) {
+      const updated = await api.updateBook(updatedData.id, updatedData);
+      if (updated) {
+        setBooks(prev => prev.map(b => (b.id === updatedData.id ? updated : b)));
+      } else {
+        await loadData();
+      }
+    } else {
+      const updated = books.map(b => (b.id === updatedData.id ? { ...b, ...updatedData } : b));
+      setBooks(updated);
+      localStorage.setItem('BSNM_BOOKS', JSON.stringify(updated));
+    }
+
+    if (selectedBook && selectedBook.id === updatedData.id) {
+      setSelectedBook(prev => (prev ? { ...prev, ...updatedData } : null));
+    }
+  };
+
   const handleDeleteBook = async (targetBook: Book) => {
     if (isBackendConnected) {
       const success = await api.deleteBook(targetBook.id);
@@ -286,6 +319,7 @@ export const App: React.FC = () => {
                 onSelect={setSelectedBook}
                 onShowQR={setQrModalBook}
                 onToggleStatus={handleToggleStatus}
+                onEditBook={(b) => setEditingBook(b)}
                 onDeleteBook={handleDeleteBook}
               />
             ))}
@@ -327,7 +361,16 @@ export const App: React.FC = () => {
           }}
           isAdmin={isAdmin}
           onToggleStatus={handleToggleStatus}
+          onEditBook={(b) => setEditingBook(b)}
           onDeleteBook={handleDeleteBook}
+        />
+      )}
+
+      {editingBook && (
+        <EditBookModal
+          book={editingBook}
+          onClose={() => setEditingBook(null)}
+          onSaveBook={handleUpdateBook}
         />
       )}
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Book } from '../types';
-import { X, Heart, QrCode, CheckCircle2, Calendar, Building2, BookOpen, Trash2 } from 'lucide-react';
+import { X, Heart, QrCode, CheckCircle2, Calendar, Building2, BookOpen, Trash2, Edit3 } from 'lucide-react';
 
 interface BookDetailModalProps {
   book: Book;
@@ -8,6 +8,7 @@ interface BookDetailModalProps {
   onShowQR: (book: Book) => void;
   isAdmin: boolean;
   onToggleStatus: (book: Book) => void;
+  onEditBook?: (book: Book) => void;
   onDeleteBook?: (book: Book) => void;
 }
 
@@ -17,6 +18,7 @@ export const BookDetailModal: React.FC<BookDetailModalProps> = ({
   onShowQR,
   isAdmin,
   onToggleStatus,
+  onEditBook,
   onDeleteBook,
 }) => {
   const isSold = book.status === 'SOLD';
@@ -145,6 +147,18 @@ export const BookDetailModal: React.FC<BookDetailModalProps> = ({
                   >
                     <CheckCircle2 className="w-4 h-4" />
                     <span>{isSold ? 'Mở bán lại' : 'Đã bán'}</span>
+                  </button>
+                )}
+                {isAdmin && onEditBook && (
+                  <button
+                    onClick={() => {
+                      onEditBook(book);
+                      onClose();
+                    }}
+                    className="py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-1.5 bg-stone-100 hover:bg-stone-200 text-stone-800 border border-stone-300"
+                  >
+                    <Edit3 className="w-4 h-4 text-stone-600" />
+                    <span>Sửa sách</span>
                   </button>
                 )}
                 {isAdmin && onDeleteBook && (

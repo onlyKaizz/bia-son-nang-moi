@@ -8,7 +8,7 @@ interface HeaderProps {
   isBackendConnected?: boolean;
 }
 
-export const Header: React.FC<HeaderProps> = ({ isAdmin, setIsAdmin }) => {
+export const Header: React.FC<HeaderProps> = ({ isAdmin, setIsAdmin, isBackendConnected }) => {
   const [showPinModal, setShowPinModal] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -44,6 +44,31 @@ export const Header: React.FC<HeaderProps> = ({ isAdmin, setIsAdmin }) => {
 
         {/* Right side controls */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          {/* Database Connection Status Indicator */}
+          <div
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium border transition ${
+              isBackendConnected
+                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                : 'bg-amber-50 text-amber-700 border-amber-200'
+            }`}
+            title={
+              isBackendConnected
+                ? 'Đã kết nối trực tiếp cơ sở dữ liệu backend'
+                : 'Đang chạy chế độ offline / lưu trình duyệt tạm thời (chưa kết nối backend DB)'
+            }
+          >
+            <span
+              className={`w-2 h-2 rounded-full ${
+                isBackendConnected ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'
+              }`}
+            />
+            <span className="hidden sm:inline">
+              {isBackendConnected ? 'Database: Đã kết nối' : 'Database: Chưa kết nối'}
+            </span>
+            <span className="sm:hidden">
+              {isBackendConnected ? 'DB Live' : 'DB Offline'}
+            </span>
+          </div>
 
           {/* Admin Toggle */}
           {isAdmin ? (

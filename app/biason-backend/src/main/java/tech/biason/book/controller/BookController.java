@@ -55,6 +55,23 @@ public class BookController {
         return ApiResponse.ok("Thêm sách mới vào kho thành công", saved);
     }
 
+    @PutMapping("/{id}")
+    public ApiResponse<BookEntity> updateBook(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        String title = (String) body.get("title");
+        String author = (String) body.get("author");
+        Integer publishYear = body.get("publishYear") != null ? Integer.valueOf(body.get("publishYear").toString()) : null;
+        String publisher = (String) body.get("publisher");
+        String categoryName = (String) body.get("category");
+        String conditionNote = (String) body.get("conditionNote");
+        Integer price = body.get("price") != null ? Integer.valueOf(body.get("price").toString()) : null;
+        String summary = (String) body.get("summary");
+        String quote = (String) body.get("quote");
+        String coverImageUrl = (String) body.get("coverImageUrl");
+
+        BookEntity updated = bookService.updateBook(id, title, author, publishYear, publisher, categoryName, conditionNote, price, summary, quote, coverImageUrl);
+        return ApiResponse.ok("Cập nhật thông tin sách thành công", updated);
+    }
+
     @DeleteMapping("/{id}")
     public ApiResponse<Void> deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);

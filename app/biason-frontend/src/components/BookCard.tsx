@@ -1,6 +1,6 @@
 import React from 'react';
 import { Book } from '../types';
-import { QrCode, CheckCircle2, Eye, Trash2 } from 'lucide-react';
+import { QrCode, CheckCircle2, Eye, Trash2, Edit3 } from 'lucide-react';
 
 interface BookCardProps {
   book: Book;
@@ -8,6 +8,7 @@ interface BookCardProps {
   onShowQR: (book: Book) => void;
   isAdmin: boolean;
   onToggleStatus: (book: Book) => void;
+  onEditBook?: (book: Book) => void;
   onDeleteBook?: (book: Book) => void;
 }
 
@@ -17,6 +18,7 @@ export const BookCard: React.FC<BookCardProps> = ({
   onShowQR,
   isAdmin,
   onToggleStatus,
+  onEditBook,
   onDeleteBook,
 }) => {
   const isSold = book.status === 'SOLD';
@@ -114,6 +116,17 @@ export const BookCard: React.FC<BookCardProps> = ({
               }`}
             >
               {isSold ? 'Đổi sang: Còn Sách' : 'Đánh dấu: ĐÃ BÁN'}
+            </button>
+          )}
+
+          {/* Admin Edit Button */}
+          {isAdmin && onEditBook && (
+            <button
+              onClick={() => onEditBook(book)}
+              className="w-full py-1.5 rounded-xl text-[11px] font-bold transition flex items-center justify-center gap-1 bg-stone-100 hover:bg-stone-200 text-stone-800 border border-stone-300"
+            >
+              <Edit3 className="w-3 h-3 text-stone-600" />
+              Sửa sách
             </button>
           )}
 

@@ -1,9 +1,12 @@
-import React, { useState, useRef } from 'react';
-import { X, Plus, ImagePlus } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { X, Save, ImagePlus, Edit3 } from 'lucide-react';
+import { Book } from '../types';
 
-interface AddBookModalProps {
+interface EditBookModalProps {
+  book: Book;
   onClose: () => void;
-  onAddBook: (bookData: {
+  onSaveBook: (updatedData: {
+    id: number;
     title: string;
     author: string;
     publish_year: number;
@@ -14,34 +17,45 @@ interface AddBookModalProps {
     summary: string;
     quote: string;
     cover_image_url: string;
-    qr_code?: string;
   }) => Promise<void>;
 }
 
-export const AddBookModal: React.FC<AddBookModalProps> = ({ onClose, onAddBook }) => {
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [publishYear, setPublishYear] = useState<number | ''>('');
-  const [publisher, setPublisher] = useState('');
-  const [price, setPrice] = useState<number | ''>('');
-  const [conditionNote, setConditionNote] = useState('');
-  const [summary, setSummary] = useState('');
-  const [quote, setQuote] = useState('');
-  const [coverPreview, setCoverPreview] = useState<string>('');
+export const EditBookModal: React.FC<EditBookModalProps> = ({ book, onClose, onSaveBook }) => {
+  const [title, setTitle] = useState(book.title || '');
+  const [author, setAuthor] = useState(book.author || '');
+  const [publishYear, setPublishYear] = useState<number | ''>(book.publish_year || '');
+  const [publisher, setPublisher] = useState(book.publisher || '');
+  const [category, setCategory] = useState(book.category || 'Ký sự & Hồi ức Chiến trường');
+  const [price, setPrice] = useState<number | ''>(book.price || 30000);
+  const [conditionNote, setConditionNote] = useState(book.condition_note || '');
+  const [summary, setSummary] = useState(book.summary || '');
+  const [quote, setQuote] = useState(book.quote || '');
+  const [coverPreview, setCoverPreview] = useState<string>(book.cover_image_url || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setTitle(book.title || '');
+    setAuthor(book.author || '');
+    setPublishYear(book.publish_year || '');
+    setPublisher(book.publisher || '');
+    setCategory(book.category || 'Ký sự & Hồi ức Chiến trường');
+    setPrice(book.price || 30000);
+    setConditionNote(book.condition_note || '');
+    setSummary(book.summary || '');
+    setQuote(book.quote || '');
+    setCoverPreview(book.cover_image_url || '');
+  }, [book]);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate file type
     if (!file.type.startsWith('image/')) {
-      alert('Vui lòng chọn file ảnh (JPEG, PNG, WebP...)');
+      alert('Vui lòng chọn file ảnh hợp lệ');
       return;
     }
 
-    // Read and resize image
     const reader = new FileReader();
     reader.onload = (ev) => {
       const img = new Image();
@@ -78,20 +92,19 @@ export const AddBookModal: React.FC<AddBookModalProps> = ({ onClose, onAddBook }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const finalCover = coverPreview || 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=600';
-
     setIsSubmitting(true);
-    await onAddBook({
+    await onSaveBook({
+      id: book.id,
       title: title.trim() || 'Sách Chưa Đặt Tên',
       author: author.trim() || 'Chưa rõ tác giả',
       publish_year: publishYear ? Number(publishYear) : 1985,
       publisher: publisher.trim() || 'Đang cập nhật',
-      category: 'Sách Cũ Phục Chế',
+      category: category.trim() || 'Ký sự & Hồi ức Chiến trường',
       price: price ? Number(price) : 30000,
       condition_note: conditionNote.trim() || 'Bìa sờn nguyên bản, đã tân trang',
       summary: summary.trim() || 'Đang cập nhật tóm tắt và câu chuyện của cuốn sách.',
       quote: quote.trim(),
-      cover_image_url: finalCover,
+      cover_image_url: coverPreview || book.cover_image_url || 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=600',
     });
     setIsSubmitting(false);
     onClose();
@@ -104,11 +117,11 @@ export const AddBookModal: React.FC<AddBookModalProps> = ({ onClose, onAddBook }
         <div className="p-5 sm:p-6 border-b border-stone-100 flex items-center justify-between sticky top-0 bg-white z-10">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-900 flex items-center justify-center font-bold">
-              <Plus className="w-5 h-5 text-amber-800" />
+              <Edit3 className="w-5 h-5 text-amber-800" />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-stone-900 tracking-tight">Thêm Sách Cũ Vào Kho</h3>
-              <p className="text-xs text-stone-500">Các ô không bắt buộc, có thể sửa bổ sung sau</p>
+              <h3 className="text-lg font-bold text-stone-900 tracking-tight">Chỉnh Sửa Sách</h3>
+              <p className="text-xs text-stone-500">Mã định danh: {book.qr_code}</p>
             </div>
           </div>
           <button
@@ -190,18 +203,29 @@ export const AddBookModal: React.FC<AddBookModalProps> = ({ onClose, onAddBook }
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-stone-700 mb-1">Tình trạng bìa phục chế</label>
+              <label className="block text-xs font-semibold text-stone-700 mb-1">Thể loại</label>
               <input
                 type="text"
-                value={conditionNote}
-                onChange={(e) => setConditionNote(e.target.value)}
-                placeholder="Ví dụ: Bìa sờn mép, gáy tốt"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                placeholder="Ví dụ: Ký sự & Hồi ức Chiến trường"
                 className="w-full text-sm px-3.5 py-2.5 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-stone-900"
               />
             </div>
           </div>
 
-          {/* Image Picker - Works with phone gallery */}
+          <div>
+            <label className="block text-xs font-semibold text-stone-700 mb-1">Tình trạng bìa phục chế</label>
+            <input
+              type="text"
+              value={conditionNote}
+              onChange={(e) => setConditionNote(e.target.value)}
+              placeholder="Ví dụ: Bìa sờn mép, gáy tốt"
+              className="w-full text-sm px-3.5 py-2.5 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-stone-900"
+            />
+          </div>
+
+          {/* Image Picker */}
           <div>
             <label className="block text-xs font-semibold text-stone-700 mb-1.5">Ảnh bìa sách</label>
             <input
@@ -220,17 +244,26 @@ export const AddBookModal: React.FC<AddBookModalProps> = ({ onClose, onAddBook }
                   className="w-full max-h-48 object-contain"
                 />
                 <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/50 to-transparent p-3 flex justify-between items-end">
-                  <span className="text-white text-xs font-medium">Ảnh bìa đã chọn</span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setCoverPreview('');
-                      if (fileInputRef.current) fileInputRef.current.value = '';
-                    }}
-                    className="text-white/90 hover:text-white text-xs font-semibold bg-white/20 backdrop-blur-xs px-2.5 py-1 rounded-lg transition"
-                  >
-                    Đổi ảnh
-                  </button>
+                  <span className="text-white text-xs font-medium">Ảnh bìa hiện tại</span>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="text-white text-xs font-semibold bg-white/20 hover:bg-white/30 backdrop-blur-xs px-2.5 py-1 rounded-lg transition"
+                    >
+                      Đổi ảnh
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCoverPreview('');
+                        if (fileInputRef.current) fileInputRef.current.value = '';
+                      }}
+                      className="text-red-200 hover:text-red-100 text-xs font-semibold bg-red-600/40 backdrop-blur-xs px-2.5 py-1 rounded-lg transition"
+                    >
+                      Xóa ảnh
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (
@@ -240,8 +273,8 @@ export const AddBookModal: React.FC<AddBookModalProps> = ({ onClose, onAddBook }
                 className="w-full py-8 border-2 border-dashed border-stone-300 rounded-2xl bg-stone-50 hover:bg-stone-100 transition flex flex-col items-center gap-2 text-stone-500 hover:text-stone-700 active:scale-[0.98]"
               >
                 <ImagePlus className="w-8 h-8" />
-                <span className="text-sm font-semibold">Chọn ảnh từ thư viện</span>
-                <span className="text-[11px] text-stone-400">Nhấn để mở thư viện ảnh trên điện thoại</span>
+                <span className="text-sm font-semibold">Chọn ảnh bìa từ thiết bị</span>
+                <span className="text-[11px] text-stone-400">Có thể để trống để dùng ảnh mặc định</span>
               </button>
             )}
           </div>
@@ -281,8 +314,8 @@ export const AddBookModal: React.FC<AddBookModalProps> = ({ onClose, onAddBook }
               disabled={isSubmitting}
               className="flex-1 py-2.5 rounded-xl bg-[#9E2A2B] hover:bg-[#852223] text-white font-semibold text-sm transition shadow-sm flex items-center justify-center gap-1.5 active:scale-98"
             >
-              <Plus className="w-4 h-4" />
-              <span>{isSubmitting ? 'Đang lưu...' : 'Lưu Sách Mới'}</span>
+              <Save className="w-4 h-4" />
+              <span>{isSubmitting ? 'Đang lưu...' : 'Lưu Thay Đổi'}</span>
             </button>
           </div>
         </form>

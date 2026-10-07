@@ -51,14 +51,14 @@ public class BookService {
                 .orElseGet(() -> categoryRepository.save(new CategoryEntity(categoryName, "Thể loại sách")));
 
         BookEntity book = new BookEntity();
-        book.setTitle(title != null ? title.trim() : "Sách Chưa Đặt Tên");
-        book.setAuthor(author != null ? author.trim() : "Nhiều tác giả");
+        book.setTitle(title != null && !title.isBlank() ? title.trim() : "Sách Chưa Đặt Tên");
+        book.setAuthor(author != null && !author.isBlank() ? author.trim() : "Chưa rõ tác giả");
         book.setPublishYear(publishYear != null ? publishYear : 1985);
-        book.setPublisher(publisher != null && !publisher.isBlank() ? publisher.trim() : "NXB Hội Nhà Văn");
+        book.setPublisher(publisher != null && !publisher.isBlank() ? publisher.trim() : "Đang cập nhật");
         book.setCategory(category);
         book.setConditionNote(conditionNote != null && !conditionNote.isBlank() ? conditionNote.trim() : "Bìa sờn nguyên bản, đã tân trang");
         book.setPrice(price != null ? price : 30000);
-        book.setSummary(summary != null && !summary.isBlank() ? summary.trim() : "Tác phẩm văn học lịch sử quý giá.");
+        book.setSummary(summary != null && !summary.isBlank() ? summary.trim() : "Đang cập nhật tóm tắt và câu chuyện của cuốn sách.");
         book.setQuote(quote != null ? quote.trim() : "");
         book.setCoverImageUrl(coverImageUrl != null && !coverImageUrl.isBlank() ? coverImageUrl.trim() : "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=600");
 
@@ -68,6 +68,33 @@ public class BookService {
         }
         book.setQrCode(qrCode);
         book.setStatus("AVAILABLE");
+
+        return bookRepository.save(book);
+    }
+
+    @Transactional
+    public BookEntity updateBook(Long bookId, String title, String author, Integer publishYear,
+                                 String publisher, String categoryName, String conditionNote,
+                                 Integer price, String summary, String quote,
+                                 String coverImageUrl) {
+        BookEntity book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy sách với ID: " + bookId));
+
+        if (categoryName != null && !categoryName.isBlank()) {
+            CategoryEntity category = categoryRepository.findByName(categoryName)
+                    .orElseGet(() -> categoryRepository.save(new CategoryEntity(categoryName, "Thể loại sách")));
+            book.setCategory(category);
+        }
+
+        if (title != null && !title.isBlank()) book.setTitle(title.trim());
+        if (author != null && !author.isBlank()) book.setAuthor(author.trim());
+        if (publishYear != null) book.setPublishYear(publishYear);
+        if (publisher != null && !publisher.isBlank()) book.setPublisher(publisher.trim());
+        if (conditionNote != null && !conditionNote.isBlank()) book.setConditionNote(conditionNote.trim());
+        if (price != null) book.setPrice(price);
+        if (summary != null && !summary.isBlank()) book.setSummary(summary.trim());
+        if (quote != null) book.setQuote(quote.trim());
+        if (coverImageUrl != null && !coverImageUrl.isBlank()) book.setCoverImageUrl(coverImageUrl.trim());
 
         return bookRepository.save(book);
     }

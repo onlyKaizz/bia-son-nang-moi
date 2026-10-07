@@ -118,6 +118,62 @@ export const api = {
     }
   },
 
+  async updateBook(bookId: number, bookData: {
+    title?: string;
+    author?: string;
+    publish_year?: number;
+    publisher?: string;
+    category?: string;
+    price?: number;
+    condition_note?: string;
+    summary?: string;
+    quote?: string;
+    cover_image_url?: string;
+  }): Promise<Book | null> {
+    try {
+      const res = await fetch(`${BASE_URL}/books/${bookId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: bookData.title,
+          author: bookData.author,
+          publishYear: bookData.publish_year,
+          publisher: bookData.publisher,
+          category: bookData.category,
+          price: bookData.price,
+          conditionNote: bookData.condition_note,
+          summary: bookData.summary,
+          quote: bookData.quote,
+          coverImageUrl: bookData.cover_image_url
+        })
+      });
+      if (!res.ok) throw new Error('API error');
+      const json = await res.json();
+      if (json.success && json.data) {
+        const b = json.data;
+        return {
+          id: Number(b.bookId),
+          qr_code: b.qrCode,
+          title: b.title,
+          author: b.author,
+          publish_year: b.publishYear,
+          publisher: b.publisher,
+          category: b.category ? b.category.name : 'Khác',
+          condition_note: b.conditionNote,
+          price: b.price,
+          summary: b.summary,
+          quote: b.quote || '',
+          cover_image_url: b.coverImageUrl,
+          status: b.status,
+          sold_at: b.soldAt
+        };
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  },
+
   async getCampaign(): Promise<{ campaign: CharityCampaign; currentRaised: number; booksSoldCount: number }> {
     try {
       const res = await fetch(`${BASE_URL}/campaign`, { signal: AbortSignal.timeout(2000) });
