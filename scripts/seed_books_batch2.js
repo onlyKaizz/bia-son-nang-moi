@@ -26,15 +26,15 @@ const books = [
     qrCode: "BSNM-007"
   },
   {
-    title: "Khoảng Rừng Có Những Ngôi Sao",
+    title: "Khoảng Trống Có Hàng Ngàn Ngôi Sao",
     author: "Văn Lê",
     publishYear: 1985,
     publisher: "NXB Phụ Nữ",
     category: "Truyện Dài & Văn Học Kháng Chiến",
     price: 35000,
-    conditionNote: "Ấn bản gốc 1985 NXB Phụ Nữ, bìa giấy craft in typo xưa có họa tiết ngôi sao, gáy chắc chắn, trang ruột đẹp",
-    summary: "Truyện dài cảm động của nhà văn Văn Lê (Lê Chí Thụy) về những năm tháng chiến tranh biên giới Tây Nam. Tác phẩm khắc họa số phận những nữ thanh niên xung phong, người lính trẻ kiên cường giữa rừng già biên ải, nơi tình đồng đội, tình yêu và phẩm giá con người tỏa sáng rực rỡ như những vì sao trên nền trời rừng thẳm.",
-    quote: "Giữa khoảng rừng thăm thẳm của bom đạn và hy sinh, những ngôi sao của niềm tin và tình người chưa bao giờ tắt.",
+    conditionNote: "Ấn bản gốc NXB Phụ Nữ, bìa giấy craft xưa in chữ nghệ thuật cách điệu và họa tiết những vì sao, gáy chắc chắn",
+    summary: "Truyện dài sâu lắng của nhà văn chiến sĩ Văn Lê (Lê Chí Thụy) do Nhà xuất bản Phụ nữ ấn hành. Tác phẩm khắc họa thế giới nội tâm và những khoảng lặng đầy chất thơ của tuổi trẻ nơi chiến trường khốc liệt, nơi khoảng trống giữa những đau thương, mất mát luôn được lấp đầy bởi hàng ngàn ngôi sao của niềm tin, hy vọng và phẩm giá con người.",
+    quote: "Dẫu cuộc đời có những khoảng trống chia lìa, trên bầu trời tâm hồn vẫn luôn lấp lánh hàng ngàn ngôi sao của lý tưởng và tình yêu thương.",
     coverImageUrl: "",
     qrCode: "BSNM-008"
   },
