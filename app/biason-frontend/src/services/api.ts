@@ -202,22 +202,26 @@ export const api = {
   },
 
   async getGuestbook(): Promise<GuestbookEntry[]> {
+    const deletedIds: number[] = JSON.parse(localStorage.getItem('BSNM_DELETED_GUESTBOOK') || '[]');
     try {
       const res = await fetch(`${BASE_URL}/guestbook`, { signal: AbortSignal.timeout(2000) });
       if (!res.ok) throw new Error('API error');
       const json = await res.json();
       if (json.success && json.data) {
-        return json.data.map((g: any) => ({
-          id: Number(g.entryId),
-          sender_name: g.senderName,
-          message: g.message,
-          created_at: g.createdAt ? g.createdAt.replace('T', ' ').substring(0, 16) : 'Vừa xong'
-        }));
+        return json.data
+          .filter((g: any) => !deletedIds.includes(Number(g.entryId)))
+          .map((g: any) => ({
+            id: Number(g.entryId),
+            sender_name: g.senderName,
+            message: g.message,
+            created_at: g.createdAt ? g.createdAt.replace('T', ' ').substring(0, 16) : 'Vừa xong'
+          }));
       }
       throw new Error('No data');
     } catch {
       const saved = localStorage.getItem('BSNM_GUESTBOOK');
-      return saved ? JSON.parse(saved) : INITIAL_GUESTBOOK;
+      const entries: GuestbookEntry[] = saved ? JSON.parse(saved) : INITIAL_GUESTBOOK;
+      return entries.filter(e => !deletedIds.includes(e.id));
     }
   },
 
