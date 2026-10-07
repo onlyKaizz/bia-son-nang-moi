@@ -234,6 +234,17 @@ export const api = {
     }
   },
 
+  async deleteGuestbook(id: number): Promise<boolean> {
+    try {
+      const res = await fetch(`${BASE_URL}/guestbook/${id}`, {
+        method: 'DELETE'
+      });
+      return res.ok;
+    } catch {
+      return false;
+    }
+  },
+
   async deleteBook(bookId: number): Promise<boolean> {
     try {
       const res = await fetch(`${BASE_URL}/books/${bookId}`, {

@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { GuestbookEntry } from '../types';
-import { Send, Heart } from 'lucide-react';
+import { Send, Heart, Trash2 } from 'lucide-react';
 
 interface GuestbookSectionProps {
   entries: GuestbookEntry[];
   onAddEntry: (sender_name: string, message: string) => Promise<void>;
+  onDeleteEntry?: (id: number) => Promise<void>;
 }
 
-export const GuestbookSection: React.FC<GuestbookSectionProps> = ({ entries, onAddEntry }) => {
+export const GuestbookSection: React.FC<GuestbookSectionProps> = ({ entries, onAddEntry, onDeleteEntry }) => {
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -93,11 +94,26 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({ entries, onA
           {entries.map((entry) => (
             <div
               key={entry.id}
-              className="p-4 rounded-2xl bg-stone-50/70 border border-stone-200/70 space-y-1.5 shadow-2xs hover:bg-white transition"
+              className="p-4 rounded-2xl bg-stone-50/70 border border-stone-200/70 space-y-1.5 shadow-2xs hover:bg-white transition group relative"
             >
               <div className="flex items-center justify-between text-xs">
                 <span className="font-bold text-stone-900">{entry.sender_name}</span>
-                <span className="text-[11px] text-stone-400 font-medium">{entry.created_at}</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] text-stone-400 font-medium">{entry.created_at}</span>
+                  {onDeleteEntry && (
+                    <button
+                      onClick={() => {
+                        if (confirm(`Bạn có chắc chắn muốn xóa lời nhắn của "${entry.sender_name}" không?`)) {
+                          onDeleteEntry(entry.id);
+                        }
+                      }}
+                      title="Xóa lời nhắn này"
+                      className="text-stone-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition p-1 hover:bg-red-50 rounded-lg"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
               </div>
               <p className="text-xs sm:text-sm text-stone-700 leading-relaxed font-normal">
                 "{entry.message}"

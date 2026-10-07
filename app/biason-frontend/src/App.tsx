@@ -240,6 +240,18 @@ export const App: React.FC = () => {
     }
   };
 
+  const handleDeleteGuestbook = async (id: number) => {
+    if (isBackendConnected) {
+      await api.deleteGuestbook(id);
+      const freshG = await api.getGuestbook();
+      setGuestbook(freshG);
+    } else {
+      const updated = guestbook.filter(g => g.id !== id);
+      setGuestbook(updated);
+      localStorage.setItem('BSNM_GUESTBOOK', JSON.stringify(updated));
+    }
+  };
+
   const filteredBooks = books.filter(b => {
     const matchesSearch =
       b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -337,6 +349,7 @@ export const App: React.FC = () => {
         <GuestbookSection
           entries={guestbook}
           onAddEntry={(name, msg) => handleAddGuestbook(name, msg)}
+          onDeleteEntry={(id) => handleDeleteGuestbook(id)}
         />
       </main>
 
