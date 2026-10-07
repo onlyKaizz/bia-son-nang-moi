@@ -348,6 +348,7 @@ export const App: React.FC = () => {
         {/* Section: Sổ Lưu Bút Tri Ân */}
         <GuestbookSection
           entries={guestbook}
+          isAdmin={isAdmin}
           onAddEntry={(name, msg) => handleAddGuestbook(name, msg)}
           onDeleteEntry={(id) => handleDeleteGuestbook(id)}
         />
