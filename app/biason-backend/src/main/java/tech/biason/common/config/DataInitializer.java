@@ -38,13 +38,23 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         if (categoryRepository.count() == 0) {
-            CategoryEntity c1 = categoryRepository.save(new CategoryEntity("Ký sự & Hồi ức Chiến trường", "Nhật ký, hồi ức chân thực từ chiến sĩ"));
-            CategoryEntity c2 = categoryRepository.save(new CategoryEntity("Tiểu thuyết Thời kỳ Kháng chiến", "Văn học sử thi ca ngợi tinh thần bảo vệ tổ quốc"));
-            CategoryEntity c3 = categoryRepository.save(new CategoryEntity("Văn học Thời Bao cấp & Đổi mới", "Giai đoạn chuyển mình của đất nước 1975-1995"));
-            CategoryEntity c4 = categoryRepository.save(new CategoryEntity("Thơ ca Kháng chiến", "Những vần thơ theo bước chân người lính"));
+            categoryRepository.save(new CategoryEntity("Ký sự & Hồi ức Chiến trường", "Nhật ký, hồi ức chân thực từ chiến sĩ"));
+            categoryRepository.save(new CategoryEntity("Tiểu thuyết Thời kỳ Kháng chiến", "Văn học sử thi ca ngợi tinh thần bảo vệ tổ quốc"));
+            categoryRepository.save(new CategoryEntity("Văn học Thời Bao cấp & Đổi mới", "Giai đoạn chuyển mình của đất nước 1975-1995"));
+            categoryRepository.save(new CategoryEntity("Thơ ca Kháng chiến", "Những vần thơ theo bước chân người lính"));
+        }
 
-            if (bookRepository.count() == 0) {
-                seedBook("BSNM-001", "Nhật Ký Đặng Thùy Trâm", "Đặng Thùy Trâm", 2005, "NXB Hội Nhà Văn", c1,
+        if (bookRepository.count() == 0) {
+            CategoryEntity c1 = categoryRepository.findByName("Ký sự & Hồi ức Chiến trường")
+                    .orElseGet(() -> categoryRepository.save(new CategoryEntity("Ký sự & Hồi ức Chiến trường", "Nhật ký, hồi ức chân thực từ chiến sĩ")));
+            CategoryEntity c2 = categoryRepository.findByName("Tiểu thuyết Thời kỳ Kháng chiến")
+                    .orElseGet(() -> categoryRepository.save(new CategoryEntity("Tiểu thuyết Thời kỳ Kháng chiến", "Văn học sử thi ca ngợi tinh thần bảo vệ tổ quốc")));
+            CategoryEntity c3 = categoryRepository.findByName("Văn học Thời Bao cấp & Đổi mới")
+                    .orElseGet(() -> categoryRepository.save(new CategoryEntity("Văn học Thời Bao cấp & Đổi mới", "Giai đoạn chuyển mình của đất nước 1975-1995")));
+            CategoryEntity c4 = categoryRepository.findByName("Thơ ca Kháng chiến")
+                    .orElseGet(() -> categoryRepository.save(new CategoryEntity("Thơ ca Kháng chiến", "Những vần thơ theo bước chân người lính")));
+
+            seedBook("BSNM-001", "Nhật Ký Đặng Thùy Trâm", "Đặng Thùy Trâm", 2005, "NXB Hội Nhà Văn", c1,
                         "Bìa sờn mép, gáy đóng chỉ nguyên bản", 35000,
                         "Những dòng nhật ký xúc động của nữ bác sĩ trẻ trên chiến trường Đức Phổ ác liệt, ngời sáng lý tưởng cống hiến tuổi thanh xuân cho độc lập dân tộc.",
                         "Chỉ có tình yêu thương sâu sắc với nhân dân và lòng tin son sắt vào ngày mai mới giúp ta đứng vững trước bom rơi đạn nổ.",
