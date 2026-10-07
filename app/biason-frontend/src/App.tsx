@@ -241,14 +241,23 @@ export const App: React.FC = () => {
   };
 
   const handleDeleteGuestbook = async (id: number) => {
+    // Optimistic UI update: gỡ bỏ ngay trên giao diện và localStorage
+    const updated = guestbook.filter(g => g.id !== id);
+    setGuestbook(updated);
+    localStorage.setItem('BSNM_GUESTBOOK', JSON.stringify(updated));
+
     if (isBackendConnected) {
-      await api.deleteGuestbook(id);
-      const freshG = await api.getGuestbook();
-      setGuestbook(freshG);
-    } else {
-      const updated = guestbook.filter(g => g.id !== id);
-      setGuestbook(updated);
-      localStorage.setItem('BSNM_GUESTBOOK', JSON.stringify(updated));
+      try {
+        await api.deleteGuestbook(id);
+        const freshG = await api.getGuestbook();
+        if (freshG && freshG.length >= 0) {
+          // Lọc bỏ id vừa xóa để phòng trường hợp backend đang deploy
+          const cleaned = freshG.filter(g => g.id !== id);
+          setGuestbook(cleaned);
+        }
+      } catch (err) {
+        console.error("Lỗi xóa lưu bút:", err);
+      }
     }
   };
 
