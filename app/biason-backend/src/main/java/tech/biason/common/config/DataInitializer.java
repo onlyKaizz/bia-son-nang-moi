@@ -104,11 +104,6 @@ public class DataInitializer implements CommandLineRunner {
             }
         }
 
-        if (guestbookRepository.count() == 0) {
-            guestbookRepository.save(new GuestbookEntity("Nguyễn Văn An (K18 FPT)", 1L,
-                    "Cầm cuốn Nhật Ký Đặng Thùy Trâm trên tay mà lòng nghẹn ngào. Cảm ơn các bác thương bệnh binh đã hy sinh xương máu cho thế hệ chúng cháu có được ngày hòa bình hôm nay."));
-            guestbookRepository.save(new GuestbookEntity("Trần Thị Mai (K19 FPT)", 8L,
-                    "Một dự án môn học vô cùng ý nghĩa! Từng cuốn sách sờn gáy kẹp chiếc bookmark làm em thấy trân trọng hơn công lao của những người đi trước."));
         }
     }
 

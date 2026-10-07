@@ -31,4 +31,16 @@ public class GuestbookController {
         GuestbookEntity saved = guestbookService.addEntry(senderName, bookId, message);
         return ApiResponse.ok("Đã ghi nhận lời tri ân vào sổ lưu bút", saved);
     }
+
+    @DeleteMapping("/{id}")
+    public ApiResponse<Void> deleteEntry(@PathVariable Long id) {
+        guestbookService.deleteEntry(id);
+        return ApiResponse.ok("Đã xóa lời nhắn thành công", null);
+    }
+
+    @DeleteMapping
+    public ApiResponse<Void> deleteAllEntries() {
+        guestbookService.deleteAllEntries();
+        return ApiResponse.ok("Đã xóa toàn bộ lời nhắn thành công", null);
+    }
 }

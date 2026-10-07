@@ -22,4 +22,12 @@ public class GuestbookService {
         GuestbookEntity entry = new GuestbookEntity(senderName, bookId, message);
         return guestbookRepository.save(entry);
     }
+
+    public void deleteEntry(Long id) {
+        guestbookRepository.deleteById(id);
+    }
+
+    public void deleteAllEntries() {
+        guestbookRepository.deleteAll();
+    }
 }
