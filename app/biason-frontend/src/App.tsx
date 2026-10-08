@@ -10,6 +10,7 @@ import { QRModal } from './components/QRModal';
 import { AddBookModal } from './components/AddBookModal';
 import { EditBookModal } from './components/EditBookModal';
 import { GuestbookSection } from './components/GuestbookSection';
+import { DonationSection } from './components/DonationSection';
 import { Search, Plus, BookOpen } from 'lucide-react';
 
 export const App: React.FC = () => {
@@ -355,6 +356,9 @@ export const App: React.FC = () => {
             </div>
           )}
         </section>
+
+        {/* Section: QR Quyên Góp & Đồng Hành */}
+        <DonationSection />
 
         {/* Section: Sổ Lưu Bút Tri Ân */}
         <GuestbookSection
