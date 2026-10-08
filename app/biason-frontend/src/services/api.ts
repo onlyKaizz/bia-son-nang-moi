@@ -185,7 +185,7 @@ export const api = {
             campaign_name: json.data.campaignName,
             beneficiary_name: json.data.beneficiaryName,
             beneficiary_address: json.data.beneficiaryAddress,
-            target_amount: json.data.targetAmount
+            target_amount: 2000000
           },
           currentRaised: json.data.currentAmount,
           booksSoldCount: json.data.booksSold
