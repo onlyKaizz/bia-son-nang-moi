@@ -5,10 +5,10 @@ export const DonationSection: React.FC = () => {
   const [copiedAcc, setCopiedAcc] = useState(false);
 
   const bankInfo = {
-    bankName: 'Vietcombank (Ngân hàng TMCP Ngoại thương Việt Nam)',
-    accountNumber: '1042323184',
-    accountHolder: 'TRAN GIA HY',
-    branch: 'Vietcombank',
+    bankName: 'ACB (Ngân hàng TMCP Á Châu)',
+    accountNumber: '39300077',
+    accountHolder: 'NGUYEN THI HA MY',
+    branch: 'ACB',
     note: 'Quyen gop Bia Son Nang Moi',
   };
 
@@ -39,7 +39,7 @@ export const DonationSection: React.FC = () => {
           <div className="w-64 sm:w-72 max-w-full rounded-2xl overflow-hidden shadow-md border-2 border-stone-100 bg-white p-2">
             <img
               src="/qr-donation.png"
-              alt="Mã QR Vietcombank - TRAN GIA HY - 1042323184"
+              alt="Mã QR ACB - NGUYEN THI HA MY - 39300077"
               className="w-full h-auto object-contain rounded-xl"
             />
           </div>
