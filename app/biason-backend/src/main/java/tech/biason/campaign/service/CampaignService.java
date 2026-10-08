@@ -27,9 +27,15 @@ public class CampaignService {
                     c.setCampaignName("Bìa Sờn Nắng Mới — Tri Ân Người Có Công");
                     c.setBeneficiaryName("Trung tâm Điều dưỡng Thương binh và Người có công Long Đất");
                     c.setBeneficiaryAddress("Long Hải, Bà Rịa - Vũng Tàu");
-                    c.setTargetAmount(3500000);
+                    c.setTargetAmount(2000000);
                     return campaignRepository.save(c);
                 });
+
+        // Tự động đồng bộ nếu trong database đang lưu mức cũ 3.500.000
+        if (campaign.getTargetAmount() != null && campaign.getTargetAmount() == 3500000) {
+            campaign.setTargetAmount(2000000);
+            campaignRepository.save(campaign);
+        }
 
         List<BookEntity> soldBooks = bookRepository.findByStatus("SOLD");
         int totalRaised = soldBooks.stream().mapToInt(BookEntity::getPrice).sum();
@@ -46,5 +52,18 @@ public class CampaignService {
         res.put("booksSold", booksSold);
         res.put("progressPercent", Math.round(percent * 10.0) / 10.0);
         return res;
+    }
+
+    public Map<String, Object> updateTargetAmount(Integer newTarget) {
+        CampaignEntity campaign = campaignRepository.findAll().stream().findFirst().orElseGet(() -> {
+            CampaignEntity c = new CampaignEntity();
+            c.setCampaignName("Bìa Sờn Nắng Mới — Tri Ân Người Có Công");
+            c.setBeneficiaryName("Trung tâm Điều dưỡng Thương binh và Người có công Long Đất");
+            c.setBeneficiaryAddress("Long Hải, Bà Rịa - Vũng Tàu");
+            return c;
+        });
+        campaign.setTargetAmount(newTarget != null && newTarget > 0 ? newTarget : 2000000);
+        campaignRepository.save(campaign);
+        return getCampaignProgress();
     }
 }

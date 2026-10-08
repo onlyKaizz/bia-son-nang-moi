@@ -20,7 +20,7 @@ public class CampaignEntity {
     private String beneficiaryAddress;
 
     @Column(nullable = false)
-    private Integer targetAmount = 3500000;
+    private Integer targetAmount = 2000000;
 
     private LocalDateTime createdAt = LocalDateTime.now();
 

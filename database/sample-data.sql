@@ -15,7 +15,7 @@ INSERT INTO charity_campaign (campaign_id, campaign_name, beneficiary_name, bene
 (1, 'Bìa Sờn Nắng Mới — Tri Ân Thương Binh Liệt Sĩ', 
  'Trung tâm Điều dưỡng Thương binh và Người có công Long Đất', 
  'Thị trấn Long Hải, huyện Long Điền, tỉnh Bà Rịa – Vũng Tàu', 
- 3500000);
+ 2000000);
 
 -- 3. Danh mục 10 cuốn sách tiêu biểu (giai đoạn 1970 - 2000)
 INSERT INTO books (qr_code, title, author, publish_year, publisher, category_id, condition_note, price, summary, quote, cover_image_url, status) VALUES

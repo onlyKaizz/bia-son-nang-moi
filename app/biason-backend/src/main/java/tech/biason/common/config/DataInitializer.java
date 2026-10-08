@@ -33,7 +33,7 @@ public class DataInitializer implements CommandLineRunner {
             c.setCampaignName("Bìa Sờn Nắng Mới — Tri Ân Thương Binh Liệt Sĩ");
             c.setBeneficiaryName("Trung tâm Điều dưỡng Thương binh và Người có công Long Đất");
             c.setBeneficiaryAddress("Khu phố Hải Sơn, Thị trấn Long Hải, Huyện Long Điền, Tỉnh Bà Rịa - Vũng Tàu");
-            c.setTargetAmount(3500000);
+            c.setTargetAmount(2000000);
             campaignRepository.save(c);
         }
 

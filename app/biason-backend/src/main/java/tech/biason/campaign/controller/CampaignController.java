@@ -21,4 +21,10 @@ public class CampaignController {
     public ApiResponse<Map<String, Object>> getCampaign() {
         return ApiResponse.ok(campaignService.getCampaignProgress());
     }
+
+    @org.springframework.web.bind.annotation.PutMapping("/target")
+    public ApiResponse<Map<String, Object>> updateTarget(@org.springframework.web.bind.annotation.RequestBody Map<String, Object> body) {
+        Integer newTarget = body.get("targetAmount") != null ? Integer.valueOf(body.get("targetAmount").toString()) : 2000000;
+        return ApiResponse.ok("Đã cập nhật mục tiêu gây quỹ", campaignService.updateTargetAmount(newTarget));
+    }
 }
