@@ -532,6 +532,36 @@ export const INITIAL_BOOKS: Book[] = [
     quote: 'Trong cuộc đấu trí thầm lặng bảo vệ bình yên cho đất nước, người chiến sĩ an ninh không được phép lơ là dù chỉ một tích tắc.',
     cover_image_url: '/book-hiep-hai.jpg',
     status: 'AVAILABLE'
+  },
+  {
+    id: 36,
+    qr_code: 'BSNM-036',
+    title: 'Những Cuộc Phiêu Lưu Của Sơ-lốc Hôm (Tập III)',
+    author: 'Arthur Conan Doyle',
+    publish_year: 1987,
+    publisher: 'Sở Văn Hóa & Thông Tin Lâm Đồng',
+    category: 'Trinh Thám Kinh Điển',
+    price: 35000,
+    condition_note: 'Ấn bản Tập III năm 1987 của Sở VH&TT Lâm Đồng do Phạm Quang Trung dịch, giấy bãi bằng vàng nâu đậm chất thời bao cấp, có lưu bút/chữ ký kỷ niệm ngày 12/6/87, ruột vẹn nguyên',
+    summary: 'Tập III trong bộ truyện trinh thám kinh điển thế giới về thám tử đại tài Sherlock Holmes và bác sĩ Watson, do dịch giả Phạm Quang Trung chuyển ngữ và Sở VH&TT Lâm Đồng xuất bản năm 1987. Tác phẩm tập hợp những vụ kỳ án hóc búa bậc nhất với phương pháp suy luận quy nạp sắc bén, đưa độc giả bước vào không khí London sương mù cuối thế kỷ 19.',
+    quote: 'Khi bạn đã loại trừ những điều không thể, thì điều còn lại, dù khó tin đến đâu, vẫn phải là sự thật.',
+    cover_image_url: '/book-nhung-cuoc-phieu-luu-cua-so-loc-hom-tap-3.jpg',
+    status: 'AVAILABLE'
+  },
+  {
+    id: 37,
+    qr_code: 'BSNM-037',
+    title: 'Nơi Đối Mặt',
+    author: 'Nguyễn Ngọc Mộc',
+    publish_year: 1982,
+    publisher: 'NXB Quân Đội Nhân Dân',
+    category: 'Truyện & Ký Quân Đội',
+    price: 35000,
+    condition_note: 'Ấn bản nguyên gốc năm 1982 của NXB Quân Đội Nhân Dân (logo QĐND), bìa màu vàng đất với phong cách đồ họa ước lệ độc đáo, mép sờn thời gian, trang giấy nhuốm màu ký ức chiến trận',
+    summary: 'Tập truyện giàu xúc cảm của nhà văn Quân đội Nguyễn Ngọc Mộc, do NXB Quân Đội Nhân Dân ấn hành năm 1982. Tác phẩm tái hiện những khoảnh khắc đối mặt gay cấn và thử thách cam go của người lính nơi tiền tuyến — không chỉ là đối mặt với hiểm nguy bom đạn, mà còn là đối mặt với chính phẩm giá, lý tưởng và tình đồng đội cao cả.',
+    quote: 'Nơi đối mặt gay gắt nhất giữa sự sống và cái chết cũng chính là nơi phẩm chất người lính ngời sáng vẻ đẹp kiên trung và nhân ái.',
+    cover_image_url: '/book-noi-doi-mat.jpg',
+    status: 'AVAILABLE'
   }
 ];
 
