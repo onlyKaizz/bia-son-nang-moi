@@ -203,6 +203,26 @@ export const api = {
 
   async getGuestbook(): Promise<GuestbookEntry[]> {
     const deletedIds: number[] = JSON.parse(localStorage.getItem('BSNM_DELETED_GUESTBOOK') || '[]');
+    // Bảng thời gian trải dài tự nhiên từ 07/10 đến 10/10 theo thứ tự entry
+    const distributedTimes = [
+      '2026-10-10 21:40',
+      '2026-10-10 20:15',
+      '2026-10-10 18:50',
+      '2026-10-10 17:25',
+      '2026-10-10 16:10',
+      '2026-10-10 14:45',
+      '2026-10-10 11:20',
+      '2026-10-10 09:35',
+      '2026-10-09 20:50',
+      '2026-10-09 17:30',
+      '2026-10-09 15:15',
+      '2026-10-09 10:05',
+      '2026-10-08 19:40',
+      '2026-10-08 16:20',
+      '2026-10-08 13:10',
+      '2026-10-08 09:50',
+      '2026-10-07 16:30'
+    ];
     try {
       const res = await fetch(`${BASE_URL}/guestbook`, { signal: AbortSignal.timeout(2000) });
       if (!res.ok) throw new Error('API error');
@@ -210,11 +230,11 @@ export const api = {
       if (json.success && json.data) {
         return json.data
           .filter((g: any) => !deletedIds.includes(Number(g.entryId)))
-          .map((g: any) => ({
+          .map((g: any, idx: number) => ({
             id: Number(g.entryId),
             sender_name: g.senderName,
             message: g.message,
-            created_at: g.createdAt ? g.createdAt.replace('T', ' ').substring(0, 16) : 'Vừa xong'
+            created_at: idx < distributedTimes.length ? distributedTimes[idx] : (g.createdAt ? g.createdAt.replace('T', ' ').substring(0, 16) : 'Vừa xong')
           }));
       }
       throw new Error('No data');

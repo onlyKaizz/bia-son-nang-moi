@@ -19,7 +19,16 @@ public class GuestbookService {
     }
 
     public GuestbookEntity addEntry(String senderName, Long bookId, String message) {
+        return addEntry(senderName, bookId, message, null);
+    }
+
+    public GuestbookEntity addEntry(String senderName, Long bookId, String message, String createdAtStr) {
         GuestbookEntity entry = new GuestbookEntity(senderName, bookId, message);
+        if (createdAtStr != null && !createdAtStr.isBlank()) {
+            try {
+                entry.setCreatedAt(java.time.LocalDateTime.parse(createdAtStr));
+            } catch (Exception ignored) {}
+        }
         return guestbookRepository.save(entry);
     }
 

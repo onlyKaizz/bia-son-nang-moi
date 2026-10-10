@@ -1258,104 +1258,104 @@ export const INITIAL_BOOKS: Book[] = [
 export const INITIAL_GUESTBOOK: GuestbookEntry[] = [
   {
     id: 1,
-    sender_name: 'Nguyễn Minh Quân',
-    message: 'Kính chúc các cô chú, các bác ở Trung tâm Long Đất luôn dồi dào sức khỏe và an vui trong cuộc sống ạ.',
-    created_at: '2026-10-10 14:15'
+    sender_name: 'Lê Quang Thái',
+    message: 'Tối nay đọc xong cuốn sách thấy lòng nhẹ nhõm hẳn. Chúc các cô chú ở trung tâm Long Hải luôn mạnh khỏe, ngủ thật ngon giấc ạ.',
+    created_at: '2026-10-10 21:40'
   },
   {
     id: 2,
-    sender_name: 'Lê Thảo Vy',
-    message: 'Tụi con thế hệ trẻ luôn biết ơn sự hy sinh thầm lặng của các bác vì độc lập hôm nay. Chúc các bác thật nhiều niềm vui!',
-    created_at: '2026-10-10 14:32'
+    sender_name: 'Trịnh Cẩm Tú',
+    message: 'Tụi con ghé mua sách vừa tìm được sách hay vừa góp được chút tấm lòng nhỏ. Chúc các bác luôn bình an và nhiều niềm vui.',
+    created_at: '2026-10-10 20:15'
   },
   {
     id: 3,
-    sender_name: 'Trần Hoàng Long',
-    message: 'Mong một phần đóng góp nhỏ từ việc mua sách cũ có thể gửi gắm chút ấm áp đến các cô chú thương binh tại Long Hải.',
-    created_at: '2026-10-10 15:04'
+    sender_name: 'Hoàng Quốc Bảo',
+    message: 'Nhờ có các bác mà thế hệ tụi con mới có những ngày tháng yên bình để cắp sách tới trường. Chúc các bác thương binh luôn an vui!',
+    created_at: '2026-10-10 18:50'
   },
   {
     id: 4,
-    sender_name: 'Đặng Mai Phương',
-    message: 'Mỗi cuốn sách trao đi là một tấm lòng tụi con hướng về các bác ở trung tâm. Kính chúc các bác luôn khỏe mạnh, yêu đời!',
-    created_at: '2026-10-10 15:20'
+    sender_name: 'Tô Ánh Nguyệt',
+    message: 'Hôm nay trời trở gió, con mong các bác giữ ấm và bớt đau nhức ở các vết thương xưa nhé ạ.',
+    created_at: '2026-10-10 17:25'
   },
   {
     id: 5,
-    sender_name: 'Phạm Đức Huy',
-    message: 'Con chúc các bác nhiều sức khỏe, những ngày trái gió trở trời vết thương bớt đau và luôn thấy ấm lòng vì chúng con luôn nhớ ơn.',
-    created_at: '2026-10-10 15:45'
-  },
-  {
-    id: 6,
-    sender_name: 'Vũ Thị Ngọc Hà',
-    message: 'Cảm ơn dự án ý nghĩa này. Chúc các cô chú, các bác tại Trung tâm Long Đất mỗi ngày đều trọn vẹn bình yên và niềm vui!',
+    sender_name: 'Lương Hoài Nam',
+    message: 'Một cuốn sách cũ đổi lại một nụ cười, chúc các cô chú ở trung tâm luôn dồi dào sức khỏe và yêu đời.',
     created_at: '2026-10-10 16:10'
   },
   {
+    id: 6,
+    sender_name: 'Nguyễn Tấn Đạt',
+    message: 'Mong các bác ở Long Hải luôn có thật nhiều tiếng cười bên bạn bè đồng đội mỗi ngày.',
+    created_at: '2026-10-10 14:45'
+  },
+  {
     id: 7,
-    sender_name: 'Ngô Thanh Trúc',
-    message: 'Mong các bác thương binh luôn giữ nụ cười và tinh thần lạc quan. Tụi con luôn tự hào và biết ơn thế hệ đi trước thật nhiều.',
-    created_at: '2026-10-10 16:35'
+    sender_name: 'Phan Thị Diệu My',
+    message: 'Cảm ơn ban tổ chức vì một dự án rất ấm áp. Con kính chúc các bác thương bệnh binh luôn lạc quan, sống vui khỏe cùng con cháu.',
+    created_at: '2026-10-10 11:20'
   },
   {
     id: 8,
-    sender_name: 'Bùi Gia Khiêm',
-    message: 'Xin gửi ngàn lời tri ân chân thành nhất tới các bác. Chúc các bác ăn ngon miệng, ngủ ngon giấc và sống vui khỏe mỗi ngày.',
-    created_at: '2026-10-10 17:02'
+    sender_name: 'Đỗ Hữu Nghĩa',
+    message: 'Biết ơn các bác đã cống hiến cả thanh xuân cho đất nước. Chúc các bác ăn ngon miệng và luôn khỏe khoắn ạ.',
+    created_at: '2026-10-10 09:35'
   },
   {
     id: 9,
     sender_name: 'Huỳnh Khánh Linh',
-    message: 'Cầm cuốn sách cũ trên tay mà thấy ấm lòng vì biết số tiền này sẽ tới được với các cô chú ở Trung tâm Long Đất.',
-    created_at: '2026-10-10 17:28'
+    message: 'Con cầm trên tay cuốn sách mà thấy vui lây vì biết tiền bán sách sẽ gửi về trung tâm. Kính chúc các bác thật nhiều sức khỏe!',
+    created_at: '2026-10-09 20:50'
   },
   {
     id: 10,
-    sender_name: 'Đỗ Hữu Nghĩa',
-    message: 'Kính chúc các bác thương binh, bệnh binh trung tâm Long Đất luôn mạnh khỏe, thanh thản bên bạn bè đồng đội!',
-    created_at: '2026-10-10 17:50'
+    sender_name: 'Bùi Gia Khiêm',
+    message: 'Chúc các chú, các bác ở Trung tâm Long Đất luôn giữ vững tinh thần thép của người lính và mỗi ngày đều thật an vui.',
+    created_at: '2026-10-09 17:30'
   },
   {
     id: 11,
-    sender_name: 'Phan Thị Diệu My',
-    message: 'Tụi con sinh viên thế hệ sau chỉ biết nói lời cảm ơn sâu sắc nhất tới công lao của các bác. Chúc các bác trường thọ và an nhiên ạ.',
-    created_at: '2026-10-10 18:15'
+    sender_name: 'Ngô Thanh Trúc',
+    message: 'Tụi con sinh ra thời bình, mỗi lần nghe chuyện về các bác lại càng thấy trân quý cuộc sống này hơn. Con chúc các bác sống lâu, khỏe mạnh ạ.',
+    created_at: '2026-10-09 15:15'
   },
   {
     id: 12,
-    sender_name: 'Nguyễn Tấn Đạt',
-    message: 'Chúc các bác luôn nhiều sức khỏe, tinh thần sảng khoái và nhận được thật nhiều sự quan tâm từ cộng đồng.',
-    created_at: '2026-10-10 18:40'
+    sender_name: 'Vũ Thị Ngọc Hà',
+    message: 'Gửi chút tình cảm của sinh viên tụi con tới vùng biển Long Hải. Chúc các cô chú trung tâm luôn ngập tràn tiếng cười.',
+    created_at: '2026-10-09 10:05'
   },
   {
     id: 13,
-    sender_name: 'Lương Hoài Nam',
-    message: 'Một việc nhỏ nhưng mong mang lại niềm vui lớn tới trung tâm. Chúc các cô chú luôn ấm áp và yêu đời!',
-    created_at: '2026-10-10 19:05'
+    sender_name: 'Phạm Đức Huy',
+    message: 'Mong một phần đóng góp nhỏ bé này tiếp thêm chút ấm áp cho các bác thương binh. Chúc các bác vạn sự như ý!',
+    created_at: '2026-10-08 19:40'
   },
   {
     id: 14,
-    sender_name: 'Tô Ánh Nguyệt',
-    message: 'Con chúc các bác vượt qua những cơn đau nhức khi trở trời và mỗi ngày đều có thật nhiều tiếng cười rộn rã.',
-    created_at: '2026-10-10 19:30'
+    sender_name: 'Đặng Mai Phương',
+    message: 'Hy vọng cuốn sách này sẽ sớm tìm được chủ mới để có thêm kinh phí gửi tới trung tâm. Chúc các bác luôn mạnh khỏe!',
+    created_at: '2026-10-08 16:20'
   },
   {
     id: 15,
-    sender_name: 'Hoàng Quốc Bảo',
-    message: 'Kính chúc các bác thương bệnh binh Long Hải luôn vững vàng, mạnh khỏe và sống an vui trong tình yêu thương của mọi người.',
-    created_at: '2026-10-10 20:00'
+    sender_name: 'Trần Hoàng Long',
+    message: 'Kính chúc các cô chú, các bác thương bệnh binh tại Long Hải luôn dồi dào sức khỏe, an dưỡng thật tốt ạ.',
+    created_at: '2026-10-08 13:10'
   },
   {
     id: 16,
-    sender_name: 'Trịnh Cẩm Tú',
-    message: 'Biết ơn các thế hệ cha anh đã cho chúng con một đất nước hòa bình. Con kính chúc các bác vạn sự an khang!',
-    created_at: '2026-10-10 20:15'
+    sender_name: 'Lê Thảo Vy',
+    message: 'Tụi con luôn ghi nhớ công ơn của thế hệ cha anh đi trước. Chúc các bác mỗi ngày đều bình yên và vui tươi.',
+    created_at: '2026-10-08 09:50'
   },
   {
     id: 17,
-    sender_name: 'Lê Quang Thái',
-    message: 'Chúc các cô chú ở trung tâm luôn khỏe mạnh, an dưỡng thật tốt và luôn cảm nhận được lòng biết ơn từ giới trẻ tụi con.',
-    created_at: '2026-10-10 20:25'
+    sender_name: 'Nguyễn Minh Quân',
+    message: 'Chào các bác ở Trung tâm Long Đất ạ, con chúc các bác luôn khỏe mạnh, thanh thản và luôn ấm lòng vì mọi người vẫn luôn nhớ tới các bác.',
+    created_at: '2026-10-07 16:30'
   }
 ];

@@ -117,7 +117,7 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({ entries, isA
                 </div>
               </div>
               <p className="text-xs sm:text-sm text-stone-700 leading-relaxed font-normal">
-                "{entry.message}"
+                {entry.message}
               </p>
             </div>
           ))}

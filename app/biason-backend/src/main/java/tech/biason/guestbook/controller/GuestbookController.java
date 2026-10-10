@@ -27,8 +27,9 @@ public class GuestbookController {
         String senderName = (String) body.get("senderName");
         String message = (String) body.get("message");
         Long bookId = body.get("bookId") != null ? Long.valueOf(body.get("bookId").toString()) : null;
+        String createdAtStr = (String) body.get("createdAt");
 
-        GuestbookEntity saved = guestbookService.addEntry(senderName, bookId, message);
+        GuestbookEntity saved = guestbookService.addEntry(senderName, bookId, message, createdAtStr);
         return ApiResponse.ok("Đã ghi nhận lời tri ân vào sổ lưu bút", saved);
     }
 
