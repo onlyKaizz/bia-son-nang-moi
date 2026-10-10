@@ -1258,31 +1258,31 @@ export const INITIAL_BOOKS: Book[] = [
 export const INITIAL_GUESTBOOK: GuestbookEntry[] = [
   {
     id: 1,
-    sender_name: 'Nguyễn Minh Quân (K19 FPTU)',
+    sender_name: 'Nguyễn Minh Quân',
     message: 'Kính chúc các cô chú, các bác ở Trung tâm Long Đất luôn dồi dào sức khỏe và an vui trong cuộc sống ạ.',
     created_at: '2026-10-10 14:15'
   },
   {
     id: 2,
-    sender_name: 'Lê Thảo Vy (K18 QTKD)',
+    sender_name: 'Lê Thảo Vy',
     message: 'Tụi con thế hệ trẻ luôn biết ơn sự hy sinh thầm lặng của các bác vì độc lập hôm nay. Chúc các bác thật nhiều niềm vui!',
     created_at: '2026-10-10 14:32'
   },
   {
     id: 3,
-    sender_name: 'Trần Hoàng Long (K19 SE)',
+    sender_name: 'Trần Hoàng Long',
     message: 'Mong một phần đóng góp nhỏ từ việc mua sách cũ có thể gửi gắm chút ấm áp đến các cô chú thương binh tại Long Hải.',
     created_at: '2026-10-10 15:04'
   },
   {
     id: 4,
-    sender_name: 'Đặng Mai Phương (Nhóm Bìa Sờn)',
+    sender_name: 'Đặng Mai Phương',
     message: 'Mỗi cuốn sách trao đi là một tấm lòng tụi con hướng về các bác ở trung tâm. Kính chúc các bác luôn khỏe mạnh, yêu đời!',
     created_at: '2026-10-10 15:20'
   },
   {
     id: 5,
-    sender_name: 'Phạm Đức Huy (K19 AI)',
+    sender_name: 'Phạm Đức Huy',
     message: 'Con chúc các bác nhiều sức khỏe, những ngày trái gió trở trời vết thương bớt đau và luôn thấy ấm lòng vì chúng con luôn nhớ ơn.',
     created_at: '2026-10-10 15:45'
   },
@@ -1294,7 +1294,7 @@ export const INITIAL_GUESTBOOK: GuestbookEntry[] = [
   },
   {
     id: 7,
-    sender_name: 'Ngô Thanh Trúc (K18 GD)',
+    sender_name: 'Ngô Thanh Trúc',
     message: 'Mong các bác thương binh luôn giữ nụ cười và tinh thần lạc quan. Tụi con luôn tự hào và biết ơn thế hệ đi trước thật nhiều.',
     created_at: '2026-10-10 16:35'
   },
@@ -1306,7 +1306,7 @@ export const INITIAL_GUESTBOOK: GuestbookEntry[] = [
   },
   {
     id: 9,
-    sender_name: 'Huỳnh Khánh Linh (K19 FPTU)',
+    sender_name: 'Huỳnh Khánh Linh',
     message: 'Cầm cuốn sách cũ trên tay mà thấy ấm lòng vì biết số tiền này sẽ tới được với các cô chú ở Trung tâm Long Đất.',
     created_at: '2026-10-10 17:28'
   },
@@ -1324,13 +1324,13 @@ export const INITIAL_GUESTBOOK: GuestbookEntry[] = [
   },
   {
     id: 12,
-    sender_name: 'Nguyễn Tấn Đạt (K18 SE)',
+    sender_name: 'Nguyễn Tấn Đạt',
     message: 'Chúc các bác luôn nhiều sức khỏe, tinh thần sảng khoái và nhận được thật nhiều sự quan tâm từ cộng đồng.',
     created_at: '2026-10-10 18:40'
   },
   {
     id: 13,
-    sender_name: 'Lương Hoài Nam (K19 MKT)',
+    sender_name: 'Lương Hoài Nam',
     message: 'Một việc nhỏ nhưng mong mang lại niềm vui lớn tới trung tâm. Chúc các cô chú luôn ấm áp và yêu đời!',
     created_at: '2026-10-10 19:05'
   },
@@ -1342,7 +1342,7 @@ export const INITIAL_GUESTBOOK: GuestbookEntry[] = [
   },
   {
     id: 15,
-    sender_name: 'Hoàng Quốc Bảo (K19 FPT)',
+    sender_name: 'Hoàng Quốc Bảo',
     message: 'Kính chúc các bác thương bệnh binh Long Hải luôn vững vàng, mạnh khỏe và sống an vui trong tình yêu thương của mọi người.',
     created_at: '2026-10-10 20:00'
   },
@@ -1354,7 +1354,7 @@ export const INITIAL_GUESTBOOK: GuestbookEntry[] = [
   },
   {
     id: 17,
-    sender_name: 'Lê Quang Thái (K18 CS)',
+    sender_name: 'Lê Quang Thái',
     message: 'Chúc các cô chú ở trung tâm luôn khỏe mạnh, an dưỡng thật tốt và luôn cảm nhận được lòng biết ơn từ giới trẻ tụi con.',
     created_at: '2026-10-10 20:25'
   }
