@@ -1237,6 +1237,21 @@ export const INITIAL_BOOKS: Book[] = [
     quote: 'Ký ức là sợi dây duy nhất kết nối những linh hồn đã khuất với sự sống, nhắc nhở chúng ta về cội nguồn và lòng tha thứ.',
     cover_image_url: '/book-ngoi-nha-cua-nhung-hon-ma.jpg',
     status: 'AVAILABLE'
+  },
+  {
+    id: 83,
+    qr_code: 'BSNM-083',
+    title: 'Mưa (Tập Truyện — Tập 2)',
+    author: 'W. Somerset Maugham (Xômơxét Môôm)',
+    publish_year: 1984,
+    publisher: 'Nhà Xuất Bản Tác Phẩm Mới (Hội Nhà Văn)',
+    category: 'Truyện Ngắn Văn Học Anh Cổ Điển',
+    price: 35000,
+    condition_note: "Ấn bản năm 1984 của NXB Tác Phẩm Mới, bìa giấy mộc nâu đất tối giản in chữ 'MƯA' nhỏ góc trên, giữ nguyên vẻ đẹp mộc mạc của ấn phẩm thời bao cấp, sờn mép phong trần, ruột nguyên vẹn",
+    summary: 'Kiệt tác tập truyện ngắn của đại văn hào người Anh W. Somerset Maugham do NXB Tác Phẩm Mới (tiền thân NXB Hội Nhà Văn) ấn hành năm 1984. Tác phẩm kinh điển "Mưa" (Rain) lấy bối cảnh một hòn đảo nhiệt đới Nam Thái Bình Dương ngập chìm trong những cơn mưa dầm dề bất tận, nơi diễn ra cuộc đối đầu nghẹt thở giữa nhà truyền giáo cuồng tín Davidson và cô gái điếm Sadie Thompson, bóc trần sự giả tạo đạo đức và bản chất phức tạp khôn lường của tâm lý con người.',
+    quote: 'Cơn mưa nhiệt đới không chỉ trút nước xuống mặt đất, mà như xối rửa và lột trần mọi lớp mặt nạ đạo đức giả để lộ ra bản năng sâu kín nhất của con người.',
+    cover_image_url: '/book-mua-somerset-maugham.jpg',
+    status: 'AVAILABLE'
   }
 ];
 
