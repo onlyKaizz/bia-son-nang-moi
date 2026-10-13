@@ -13,6 +13,8 @@ import { GuestbookSection } from './components/GuestbookSection';
 import { DonationSection } from './components/DonationSection';
 import { Search, Plus, BookOpen } from 'lucide-react';
 
+import { FilterBar, FilterState, mapCategoryToGroup } from './components/FilterBar';
+
 export const App: React.FC = () => {
   const [books, setBooks] = useState<Book[]>(() => {
     if (typeof window !== 'undefined') {
@@ -49,6 +51,11 @@ export const App: React.FC = () => {
   const [showAddBookModal, setShowAddBookModal] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [filterState, setFilterState] = useState<FilterState>({
+    categoryGroup: 'ALL',
+    status: 'ALL',
+    priceRange: 'ALL',
+  });
 
   const loadData = async () => {
     const isLive = await api.isBackendLive();
@@ -264,12 +271,43 @@ export const App: React.FC = () => {
     }
   };
 
-  const filteredBooks = books.filter(b => {
+  const filteredBooks = books.filter((b) => {
+    // 1. Tìm kiếm text (tiêu đề, tác giả, NXB, thể loại)
     const matchesSearch =
       b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       b.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      b.publisher.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesSearch;
+      b.publisher.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      b.category.toLowerCase().includes(searchQuery.toLowerCase());
+
+    if (!matchesSearch) return false;
+
+    // 2. Lọc theo trạng thái đã bán / chưa bán (AVAILABLE / SOLD)
+    if (filterState.status !== 'ALL' && b.status !== filterState.status) {
+      return false;
+    }
+
+    // 3. Lọc theo nhóm thể loại (Gom 6 nhóm lớn)
+    if (filterState.categoryGroup !== 'ALL') {
+      const group = mapCategoryToGroup(b.category);
+      if (group !== filterState.categoryGroup) {
+        return false;
+      }
+    }
+
+    // 4. Lọc theo mức giá (25K-40K)
+    if (filterState.priceRange !== 'ALL') {
+      if (filterState.priceRange === '25_30' && (b.price < 25000 || b.price > 30000)) {
+        return false;
+      }
+      if (filterState.priceRange === '31_35' && (b.price < 31000 || b.price > 35000)) {
+        return false;
+      }
+      if (filterState.priceRange === '36_40' && (b.price < 36000 || b.price > 40000)) {
+        return false;
+      }
+    }
+
+    return true;
   });
 
   return (
@@ -320,17 +358,25 @@ export const App: React.FC = () => {
           </div>
 
           {/* Search Bar */}
-          <div>
+          <div className="space-y-4">
             <div className="relative">
               <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="Tìm tên sách, tác giả, nhà xuất bản..."
+                placeholder="Tìm tên sách, tác giả, nhà xuất bản, thể loại..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-2.5 rounded-2xl text-xs sm:text-sm bg-white border border-stone-200/90 focus:outline-none focus:ring-2 focus:ring-stone-900 shadow-xs"
               />
             </div>
+
+            {/* Filter Bar */}
+            <FilterBar
+              filter={filterState}
+              onChangeFilter={setFilterState}
+              totalFiltered={filteredBooks.length}
+              totalBooks={books.length}
+            />
           </div>
 
           {/* Books Grid: 2 Columns on Mobile, 4 Columns on Desktop */}
