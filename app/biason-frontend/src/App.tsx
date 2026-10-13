@@ -61,6 +61,9 @@ export const App: React.FC = () => {
     const isLive = await api.isBackendLive();
     setIsBackendConnected(isLive);
 
+    const savedTotalFund = localStorage.getItem('BSNM_TOTAL_FUND');
+    const parsedTotalFund = savedTotalFund ? Number(savedTotalFund) : undefined;
+
     if (isLive) {
       const [bList, cData, gList] = await Promise.all([
         api.getBooks(),
@@ -68,7 +71,10 @@ export const App: React.FC = () => {
         api.getGuestbook()
       ]);
       setBooks(bList);
-      setCampaign(cData.campaign);
+      setCampaign({
+        ...cData.campaign,
+        total_fund: parsedTotalFund ?? cData.campaign.total_fund ?? cData.currentRaised
+      });
       setCurrentRaised(cData.currentRaised);
       setBooksSoldCount(cData.booksSoldCount);
       setGuestbook(gList);
@@ -79,13 +85,23 @@ export const App: React.FC = () => {
           const parsed = JSON.parse(savedBooks);
           setBooks(parsed);
           const sold = parsed.filter((b: Book) => b.status === 'SOLD');
-          setCurrentRaised(sold.reduce((sum: number, b: Book) => sum + b.price, 0));
+          const sumSold = sold.reduce((sum: number, b: Book) => sum + b.price, 0);
+          setCurrentRaised(sumSold);
           setBooksSoldCount(sold.length);
+          setCampaign(prev => ({
+            ...prev,
+            total_fund: parsedTotalFund ?? sumSold
+          }));
         } catch {}
       } else {
         const sold = INITIAL_BOOKS.filter(b => b.status === 'SOLD');
-        setCurrentRaised(sold.reduce((sum, b) => sum + b.price, 0));
+        const sumSold = sold.reduce((sum, b) => sum + b.price, 0);
+        setCurrentRaised(sumSold);
         setBooksSoldCount(sold.length);
+        setCampaign(prev => ({
+          ...prev,
+          total_fund: parsedTotalFund ?? sumSold
+        }));
         localStorage.setItem('BSNM_BOOKS', JSON.stringify(INITIAL_BOOKS));
       }
 
@@ -97,6 +113,14 @@ export const App: React.FC = () => {
       }
     }
     setIsDataLoaded(true);
+  };
+
+  const handleUpdateTotalFund = (newTotal: number) => {
+    setCampaign(prev => ({
+      ...prev,
+      total_fund: newTotal
+    }));
+    localStorage.setItem('BSNM_TOTAL_FUND', String(newTotal));
   };
 
   useEffect(() => {
@@ -325,6 +349,8 @@ export const App: React.FC = () => {
           currentRaised={currentRaised}
           booksSoldCount={booksSoldCount}
           totalBooks={books.length}
+          isAdmin={isAdmin}
+          onUpdateTotalFund={handleUpdateTotalFund}
         />
 
         {/* Section: Tủ Sách Xưa Phục Chế */}

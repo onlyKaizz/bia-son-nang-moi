@@ -5,6 +5,7 @@ export const INITIAL_CAMPAIGN: CharityCampaign = {
   beneficiary_name: 'Trung tâm Điều dưỡng Thương binh và Người có công Long Đất',
   beneficiary_address: 'Thị trấn Long Hải, huyện Long Điền, tỉnh Bà Rịa – Vũng Tàu',
   target_amount: 2000000,
+  total_fund: 0,
 };
 
 export const INITIAL_BOOKS: Book[] = [

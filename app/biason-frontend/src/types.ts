@@ -30,4 +30,5 @@ export interface CharityCampaign {
   beneficiary_name: string;
   beneficiary_address: string;
   target_amount: number;
+  total_fund?: number;
 }
